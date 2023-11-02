@@ -3,15 +3,28 @@ The purpose of this project is to test a convolutional neural network with user 
 The server responds with the neural network's decision of whether the image contains trash or recycling,
 and the user can then correct the NN live.
 
-## How to Run
-To run the server, run
+## Getting Started
+First, make sure you have python and pip installed. Preferably python 3.11
+Then, you can install dependencies for the server
 ```code
-$ python3 -m server
+$ pip install -r requirements.txt
 ```
-You can then navigate to localhost:3000 in your browser to see the website.
+Install pytorch for your system with CUDA enabled (follow this link https://pytorch.org/get-started/locally/)
+If you have a CUDA enabled GPU and are using windows, you can run this command:
+```code
+$ pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+```
 
-To train the model, make sure you have a graphics card, and have pytorch installed, then run 
+## How to run:
+To train the model, use this command:
 ```code
 $ python3 -m train
 ```
+
+To run the server, use this command:
+```code
+$ python3 -m server
+```
+Then, you should be able to navigate to localhost:5000 in your browser to see the website.
+
 

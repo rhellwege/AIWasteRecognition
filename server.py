@@ -1,5 +1,11 @@
-import http.server
+from flask import Flask
+import json
 
-PORT = 3000
+app = Flask(__name__)
 
-host = ""
+@app.route('/')
+def root_endpoint():
+    return 'hello'
+
+if __name__== '__main__':
+    app.run(debug=True)
