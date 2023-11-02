@@ -4,15 +4,15 @@ The server responds with the neural network's decision of whether the image cont
 and the user can then correct the NN live.
 
 ## Getting Started
-First, make sure you have python and pip installed. Preferably python 3.11
-Then, you can install dependencies for the server
-```code
-$ pip install -r requirements.txt
-```
-Install pytorch for your system with CUDA enabled (follow this link https://pytorch.org/get-started/locally/)
+First, make sure you have python and pip installed. Preferably python 3.11.
+Install pytorch for your system with CUDA enabled (follow this link https://pytorch.org/get-started/locally/).
 If you have a CUDA enabled GPU and are using windows, you can run this command:
 ```code
 $ pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+```
+Then, you can install dependencies for the server.
+```code
+$ pip3 install -r requirements.txt
 ```
 
 ## How to run:
@@ -27,4 +27,8 @@ $ python3 -m server
 ```
 Then, you should be able to navigate to localhost:5000 in your browser to see the website.
 
-
+## Adding code
+If you import any more python packages, you can update the requirements.txt file by installing the pipreqs package, then running in the project root directory:
+```code
+$ pipreqs --force .
+```
