@@ -1,15 +1,27 @@
-import flask
-import json
+from PIL import Image
+from flask import Flask, render_template, request
 
-app = flask.Flask(__name__)
+from predict import Predictor
 
-@app.route('/', methods=['GET'])
-def root_endpoint():
-    return flask.render_template('index.html') 
+app = Flask(__name__)
 
-# TODO: add endpoints for upload image, and correct model
-# TODO: add option for which model to use, or to use no model as a test
-# TODO: handle multiple clients at the same time?
+@app.route('/')
+def upload_file():
+    return render_template('index.html')
 
-if __name__== '__main__':
+predictor = Predictor("./models/5-64x64-CNN3L-90.pts", device ='cpu')
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if 'image' in request.files:
+        image = request.files['image']
+        # Save the uploaded image to a folder (e.g., 'uploads')
+        image = Image.open(image)
+        a = str(predictor.predict(image))
+        print()
+        return a
+    return 'No image uploaded.'
+
+if __name__ == '__main__':
+
     app.run(debug=True)
