@@ -8,7 +8,7 @@ First, make sure you have python and pip installed. Preferably python 3.11.
 Install pytorch for your system with CUDA enabled (follow this link https://pytorch.org/get-started/locally/).
 If you have a CUDA enabled GPU and are using windows, you can run this command:
 ```code
-$ pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+$ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 ```
 Then, you can install dependencies for the server.
 ```code
