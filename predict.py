@@ -40,6 +40,8 @@ class Predictor():
         if the model is small, device should be cpu (it is faster)
         """
         self.device = device
+        if device == 'cuda':
+            cuda_info()
         try:
             self.model = load_model_script(model_path).to(self.device)
         except:
@@ -55,22 +57,59 @@ class Predictor():
         image must be a PIL image.
         returns a dict full of result statistics
         """
+        self.model.eval()
         result = {}
         img_tensor = self.transformer(image).to(self.device).unsqueeze(dim=0)
-        start = time.time()
-        pred = self.model(img_tensor)
-        end = time.time()
+        with torch.inference_mode(): # don't waste time on training parameters
+            start = time.time()
+            pred = self.model(img_tensor)
+            end = time.time()
         result["dur"] = end - start
         result["probabilities"] = pred.softmax(dim=1).squeeze().tolist()
         result["prediction"] = classes[pred.argmax()]
         return result
+    
+    def explore_predictions(self, dataset_dir, width=3):
+        """
+        dataset_dir must be a path to a folder which has O and R subdirectories each with train and test subdirectories with images.
+        """
+        self.model.eval()
+        fig, axes = plt.subplots(width, width, figsize=(8,8))
+        test_dataset = torchvision.datasets.ImageFolder(dataset_dir, self.transformer)
+        test_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=True, num_workers=0)
+        num_correct = 0
+        with torch.inference_mode():
+            for i in range(width ** 2):
+                image, label = next(iter(test_loader))
+                label_true = classes[label.item()]
+                pred = self.model(image.to(self.device))
+                pred_label = classes[pred.argmax()]
+                row = i // width
+                col = i % width
+                ax = axes[row, col]
+                ax.imshow(image.squeeze().permute(1,2,0))
+                correct = pred_label == label_true 
+                num_correct += correct
+                color = 'green' if correct else 'red'
+                ax.set_title(f"{pred_label}", color=color)
+                ax.axis('off')
+        plt.suptitle(f"{(num_correct/(width*width))*100:.2f}%")
+        plt.tight_layout()
+        plt.show()
+
+    def print_arch(self):
+        torchinfo.summary(model=self.model, input_size=[1, 3, self.model.image_width, self.model.image_width]) # batch size of 1 (dont overexaggerate)
 
 explore_transform = transforms.Compose([
     transforms.ToTensor()
 ])
-def explore_dataset(dataset, width=3):
+def explore_dataset(dataset_dir, width=3):
+    """
+    dataset_dir must be a path to a folder which has O and R subdirectories each with images.
+    """
     fig, axes = plt.subplots(width, width, figsize=(8,8))
-    test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=True, num_workers=0)
+    test_dataset = torchvision.datasets.ImageFolder(dataset_dir, self.transformer)
+    test_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=True, num_workers=0)
     for i in range(width ** 2):
         image, label = next(iter(test_loader))
         row = i // width
@@ -82,54 +121,8 @@ def explore_dataset(dataset, width=3):
     plt.tight_layout()
     plt.show()
 
-def explore_predictions(model, dataset, width=3):
-    model = model.to(device)
-    model.eval()
-    fig, axes = plt.subplots(width, width, figsize=(8,8))
-    test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=True, num_workers=0)
-    num_correct = 0
-    with torch.inference_mode():
-        for i in range(width ** 2):
-            image, label = next(iter(test_loader))
-            label_true = classes[label.item()]
-            pred = model(image.to(device))
-            pred_label = classes[pred.argmax()]
-            row = i // width
-            col = i % width
-            ax = axes[row, col]
-            ax.imshow(image.squeeze().permute(1,2,0))
-            correct = pred_label == label_true 
-            num_correct += correct
-            color = 'green' if correct else 'red'
-            ax.set_title(f"{pred_label}", color=color)
-            ax.axis('off')
-    plt.suptitle(f"{(num_correct/(width*width))*100:.2f}%")
-    plt.tight_layout()
-    plt.show()
-
-test_transform = transforms.Compose([
-    transforms.Resize(size=(IMAGE_WIDTH, IMAGE_WIDTH)),
-    # transforms.TrivialAugmentWide(num_magnitude_bins=31), # random rotation, crop, scale, color jittering...
-    # transforms.RandomGrayscale(p=1.0),
-    transforms.RandomHorizontalFlip(p=0.5),
-    transforms.ToTensor(),
-])
-
-# init_cuda()
-#
-# test_dataset = torchvision.datasets.ImageFolder(os.path.join(DATA_DIR, "TEST"), test_transform)
-# train_dataset = torchvision.datasets.ImageFolder(os.path.join(DATA_DIR, "TRAIN"), test_transform)
-# test_loader = DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
-#
-# model = load_model_script("./models/5-64x64-CNN3L-90.pts")
-# model = model.to(device)
-# model.eval()
-# torchinfo.summary(model=model, input_size=[1, 3, IMAGE_WIDTH, IMAGE_WIDTH]) # batch size of 1 (dont overexaggerate)
-#
-# print(model.image_width)
-# explore_predictions(model, test_dataset, 10)
 if __name__ == "__main__":
-    predictor = Predictor("./models/5-64x64-CNN3L-90.pts")
-    image = Image.open("./data/DATASET/TEST/O/O_12568.jpg")
+    predictor = Predictor("./models/5-64x64-CNN3L-90.pts", device='cuda')
+    image = Image.open("./data/DATASET/TEST/O/O_12577.jpg")
+    predictor.explore_predictions("./data/DATASET/TEST", 10)
     print(predictor.predict(image))
-

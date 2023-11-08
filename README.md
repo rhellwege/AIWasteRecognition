@@ -9,6 +9,10 @@ Make sure you have python 3.11 and pip installed, then install the dependencies 
 $ pip3 install -r requirements.txt
 ```
 
+## Download Dataset
+If you want the dataset, you can download it here: https://www.kaggle.com/datasets/techsash/waste-classification-data/download?datasetVersionNumber=1
+and make sure you extract it into a data/ directory
+
 ## How to run:
 To run the server, use this command:
 ```code
