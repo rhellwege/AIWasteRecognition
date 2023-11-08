@@ -9,12 +9,6 @@ import os
 import time
 import matplotlib.pyplot as plt
 
-IMAGE_WIDTH = 64
-BATCH_SIZE = 1
-
-MODELS_DIR = "models/"
-DATA_DIR = "data/DATASET/"
-
 classes = ["Organic", "Recycle"]
 
 def cuda_info():
@@ -98,17 +92,17 @@ class Predictor():
         plt.show()
 
     def print_arch(self):
-        torchinfo.summary(model=self.model, input_size=[1, 3, self.model.image_width, self.model.image_width]) # batch size of 1 (dont overexaggerate)
+        torchinfo.summary(model=self.model, input_size=[1, 3, self.model.image_width, self.model.image_width])
 
-explore_transform = transforms.Compose([
-    transforms.ToTensor()
-])
 def explore_dataset(dataset_dir, width=3):
     """
     dataset_dir must be a path to a folder which has O and R subdirectories each with images.
     """
     fig, axes = plt.subplots(width, width, figsize=(8,8))
-    test_dataset = torchvision.datasets.ImageFolder(dataset_dir, self.transformer)
+    explore_transform = transforms.Compose([
+        transforms.ToTensor()
+    ])
+    test_dataset = torchvision.datasets.ImageFolder(dataset_dir, explore_transform)
     test_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=True, num_workers=0)
     for i in range(width ** 2):
         image, label = next(iter(test_loader))
