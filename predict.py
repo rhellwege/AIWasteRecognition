@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 classes = ["Organic", "Recycle"]
 
 def cuda_info():
-    global device
     print(f"pytorch version: {torch.__version__}")
     if not torch.cuda.is_available():
         print("CUDA is not enabled on your system. Please enable it to train the model on the GPU.")
@@ -35,7 +34,11 @@ class Predictor():
         """
         self.device = device
         if device == 'cuda':
-            cuda_info()
+            # cuda_info()
+            if not torch.cuda.is_available():
+                print("CUDA is not enabled on your system. Please enable it to train the model on the GPU.")
+                print("falling back to cpu...")
+                self.device = 'cpu'
         try:
             self.model = load_model_script(model_path).to(self.device)
         except:
