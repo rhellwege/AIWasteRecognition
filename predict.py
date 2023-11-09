@@ -117,6 +117,6 @@ def explore_dataset(dataset_dir, width=3):
 
 if __name__ == "__main__":
     predictor = Predictor("./models/5-64x64-CNN3L-90.pts", device='cuda')
-    image = Image.open("./data/DATASET/TEST/O/O_12577.jpg")
+    # image = Image.open("plastic.webp")
     predictor.explore_predictions("./data/DATASET/TEST", 10)
     print(predictor.predict(image))
