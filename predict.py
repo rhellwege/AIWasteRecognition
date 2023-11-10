@@ -27,9 +27,11 @@ def load_model_script(model_path: str) -> nn.Module:
     return torch.jit.load(model_path)
 
 class Predictor():
-    def __init__(self, model_path: str, device='cpu'):
+    def __init__(self, model_path: str, device='cpu', optimizer=None, criterion=nn.CrossEntropyLoss(), learning_rate=0.001):
         """
         model_path must be a valid path to a .pts file (pytorch script)
+        optimizer is a torch.optim.Optimizer, if nothing is passed, it defaults to torch.Optim.SGD
+        learning_rate should be small if you don't want to mess up the model too much
         if the model is small, device should be cpu (it is faster)
         """
         self.device = device
@@ -44,6 +46,17 @@ class Predictor():
         except Exception as error:
             print("Could not load model.", error)
             exit(1)
+        try:
+            if optimizer == None:
+                self.optimizer = torch.optim.SGD(params=self.model.parameters(), lr=learning_rate)
+            else:
+                self.optimizer = optimizer
+        except Exception as error:
+            print("Could not initialize optimizer.", error)
+            exit(1)
+        self.criterion = criterion
+        self.learning_rate = learning_rate
+
         self.transformer = transforms.Compose([
             transforms.Resize(size=(self.model.image_width, self.model.image_width)),
             transforms.ToTensor(),
@@ -62,6 +75,26 @@ class Predictor():
             start = time.time()
             pred = self.model(img_tensor)
             end = time.time()
+        result["dur"] = end - start
+        result["probabilities"] = pred.softmax(dim=1).squeeze().tolist()
+        result["prediction"] = classes[pred.argmax()]
+        return result
+    
+    def train(self, image, label: int) -> dict:
+        """
+        image must be a PIL image.
+        label is what the image actually is, 0 means the image is organic, 1
+        means the image is recyclable
+        returns a dict including information about the loss, probabilities, and duration
+        """
+        result = {}
+        image = image.convert("RGB")
+        img_tensor = self.transformer(image).to(self.device).unsqueeze(dim=0)
+        label = torch.tensor_like(label)
+        self.model.train()
+        start = time.time()
+        pred = self.model(img_tensor)
+        end = time.time()
         result["dur"] = end - start
         result["probabilities"] = pred.softmax(dim=1).squeeze().tolist()
         result["prediction"] = classes[pred.argmax()]
