@@ -24,7 +24,7 @@ def cuda_info():
         print(f"Name of current CUDA device: {torch.cuda.get_device_name(cuda_id)}")
 
 def load_model_script(model_path: str) -> nn.Module:
-    return torch.jit.load(model_path) # no need for the class definition!
+    return torch.jit.load(model_path)
 
 class Predictor():
     def __init__(self, model_path: str, device='cpu'):
@@ -41,8 +41,8 @@ class Predictor():
                 self.device = 'cpu'
         try:
             self.model = load_model_script(model_path).to(self.device)
-        except:
-            print("Could not load model.")
+        except Exception as error:
+            print("Could not load model.", error)
             exit(1)
         self.transformer = transforms.Compose([
             transforms.Resize(size=(self.model.image_width, self.model.image_width)),
@@ -56,6 +56,7 @@ class Predictor():
         """
         self.model.eval()
         result = {}
+        image = image.convert("RGB")
         img_tensor = self.transformer(image).to(self.device).unsqueeze(dim=0)
         with torch.inference_mode(): # don't waste time on training parameters
             start = time.time()
