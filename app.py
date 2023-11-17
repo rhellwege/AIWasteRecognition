@@ -7,8 +7,8 @@ import threading
 from predict import Predictor
 
 # initialize globals
-# predictor = Predictor("./models/5-64x64-CNN3L-90.pts", device ='cpu')
-predictor = Predictor("./models/10-64x64-CPUModel-85.pts", device ='cpu')
+predictor = Predictor("./models/5-64x64-CNN3L-90.pts", device ='cpu')
+# predictor = Predictor("./models/1-48x48-CPUModel-61.pts", device ='cpu')
 
 app = Flask(__name__)
 plt_mutex = threading.Lock() # block the main thread whenever matplot lib is generating an image
@@ -50,4 +50,4 @@ def get_explore_image():
     
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

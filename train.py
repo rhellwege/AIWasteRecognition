@@ -4,14 +4,12 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 import torchvision
 from torchvision.transforms import v2
-import torchinfo
-import torchmetrics
+# import torchinfo
 import matplotlib.pyplot as plt
 import time
 from tqdm import tqdm
 import pandas as pd
 from PIL import Image
-from torch.utils.tensorboard import SummaryWriter
 import os
 
 print("This script is intended to be run on a machine with cuda support to")
@@ -48,6 +46,7 @@ def generate_model_filename(model: nn.Module, epochs: int, image_width: int, val
     return f"{epochs}-{image_width}x{image_width}-{model.__class__.__name__}-{int(val_acc)}.pts"
 
 def save_model(model: nn.Module, epochs: int, image_width: int, val_acc: float):
+    model=model.to('cpu')
     model_path = os.path.join(MODELS_DIR , generate_model_filename(model, epochs,  image_width, val_acc))
     print(f"Saving model state_dict as {model_path}")
     model_scripted = torch.jit.script(model)
@@ -61,7 +60,7 @@ def accuracy_fn(y_pred: torch.Tensor, y_true: torch.Tensor):
 #
 # load datasets
 
-class CNN3LAdam(nn.Module):
+class CPUModel(nn.Module):
     def __init__(self, 
                  input_shape: int,
                  hidden_units: int,
@@ -135,7 +134,7 @@ EPOCHS = 10
 BATCH_SIZE = 64
 HIDDEN_UNITS = 32
 # INITIAL_LEARNING_RATE = 0.1
-INITIAL_LEARNING_RATE = 3e-4
+INITIAL_LEARNING_RATE = 0.01
 DROPOUT_P = 0.3 # normally 0.5
 
 train_transform = v2.Compose([
@@ -161,12 +160,11 @@ test_dataset = torchvision.datasets.ImageFolder(os.path.join(DATA_DIR, "TEST"), 
 train_loader      = DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
 validation_loader = DataLoader(dataset=test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=0)
 
-model = CNN3LAdam(input_shape=3, hidden_units=HIDDEN_UNITS, output_shape=2, dropout_p=DROPOUT_P, image_width=IMAGE_WIDTH).to(device)
-torchinfo.summary(model=model, input_size=[1, 3, IMAGE_WIDTH, IMAGE_WIDTH])
-writer = SummaryWriter(f'./runs/OR/')
+model = CPUModel(input_shape=3, hidden_units=HIDDEN_UNITS, output_shape=2, dropout_p=DROPOUT_P, image_width=IMAGE_WIDTH).to(device)
+# torchinfo.summary(model=model, input_size=[1, 3, IMAGE_WIDTH, IMAGE_WIDTH])
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(params=model.parameters(), lr=INITIAL_LEARNING_RATE)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
+optimizer = torch.optim.SGD(params=model.parameters(), lr=INITIAL_LEARNING_RATE)
+# scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 
 train_loss = None
 train_acc = 0
@@ -203,8 +201,10 @@ for epoch in range(EPOCHS):
             val_acc += accuracy_fn(y_true=labels_val, y_pred=val_pred.argmax(dim=1))
         val_loss /= len(validation_loader)
         val_acc /= len(validation_loader)
-    scheduler.step(val_loss) # update the learning rate
+        if val_acc >= 90:
+            save_model(model=model.to('cpu'), epochs=EPOCHS, image_width=IMAGE_WIDTH, val_acc=val_acc)
+    # scheduler.step(val_loss) # update the learning rate
     validation_end = time.time()
     print(f"Epoch {epoch} Complete | Train loss: {train_loss:.4f}, Train acc: {train_acc:.2f}% | Test loss: {val_loss:.4f}, Test acc: {val_acc:.2f}% || Training Dur: {train_end-train_start:.2f}s | Validation Dur: {validation_end-validation_start:.2f}s")
 
-save_model(model=model, epochs=EPOCHS, image_width=IMAGE_WIDTH, val_acc=val_acc)
+save_model(model=model.to('cpu'), epochs=EPOCHS, image_width=IMAGE_WIDTH, val_acc=val_acc)

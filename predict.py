@@ -1,6 +1,5 @@
 import torch
 import io
-import torchinfo
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
 import torchvision
@@ -25,6 +24,7 @@ def cuda_info():
         print(f"Name of current CUDA device: {torch.cuda.get_device_name(cuda_id)}")
 
 def load_model_script(model_path: str) -> nn.Module:
+    print(f"Loading model: {model_path}")
     return torch.jit.load(model_path)
 
 class Predictor():
@@ -155,8 +155,6 @@ class Predictor():
         plt.close('all')
         return buffer
 
-    def print_arch(self):
-        torchinfo.summary(model=self.model, input_size=[1, 3, self.model.image_width, self.model.image_width])
 
 def explore_dataset(dataset_dir, width=3):
     """

@@ -1,0 +1,8 @@
+version: '3'
+services:
+  app:
+    container_name: waste_recognition
+    build: .
+    ports:
+      - 5000:5000
+
