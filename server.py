@@ -27,7 +27,7 @@ def upload():
         image = Image.open(image)
         prev_images[request.remote_addr] = image
         result = json.dumps(predictor.predict(image))
-        return result, 200, {'Content-Type': 'application/json'}
+        return result, 200, {'Content-Type': 'application/json'} # set content type to json
     return make_response("No Image uploaded.", 404)
 # This endpoint is only valid if the user has uploaded an image and there is an entry in prev_predictions
 # expects a binary value: 
@@ -39,7 +39,7 @@ def train_model():
     label = data["label"]
     result = predictor.train(prev_images[request.remote_addr], label)
     result = json.dumps(result)
-    return result, 200, {'Content-Type': 'application/json'}
+    return result, 200, {'Content-Type': 'application/json'} # set content type to json
 
 if __name__ == '__main__':
     app.run(debug=True)

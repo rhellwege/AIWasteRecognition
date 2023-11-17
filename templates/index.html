@@ -13,11 +13,13 @@
 <body>
     <form id="predictForm" action="/predict" method="post" enctype="multipart/form-data">
         <input id="imageInput" type="file" name="image" accept="image/*">
-        <input type="submit" value="Upload">
+        <input type="submit" value="Predict">
     </form>
 
-    <button type="button" id="organic">Organic</button>
-    <button type="button" id="recyclable">Recyclable</button>
+    <div id="trainDiv">
+      <button type="button" id="organic">Organic</button>
+      <button type="button" id="recyclable">Recyclable</button>
+    </div>
 </body>
 
 

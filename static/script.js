@@ -1,7 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
   const predictForm = document.getElementById('predictForm');
   const imageInput = document.getElementById('imageInput');
+  const trainDiv = document.getElementById('trainDiv');
 
+  trainDiv.style.display = "none";
+
+  imageInput.addEventListener('change', () => {
+    trainDiv.style.display = "block";
+  });
   predictForm.addEventListener('submit', (event) => {
     event.preventDefault(); // do not redirect to a seperate page, we want to hit a JSON endpoint.
     // manually populate the form and send the data to the server, expecting json response.

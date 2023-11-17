@@ -74,7 +74,7 @@ class Predictor():
         probabilities: a list of two floats, represents the probability of each class, adds up to 1.
         prediction: The class name of the most likely prediction 'Organic' or 'Recyclable'
         """
-        print('predincting image...')
+        print('[PREDICTOR] :: Predicting image...')
         self.model.eval()
         result = {}
         image = image.convert("RGB")
@@ -102,7 +102,7 @@ class Predictor():
         elif label == "Recyclable":
             label_tensor = torch.Tensor([0, 1]).unsqueeze(dim=0).to(self.device)
 
-        print('live training...')
+        print(f'[PREDICTOR] :: Live training image as {label}')
         image = image.convert("RGB")
         img_tensor = self.transformer(image).unsqueeze(dim=0).to(self.device)
         print("img_tensor shape: ", img_tensor.shape)
