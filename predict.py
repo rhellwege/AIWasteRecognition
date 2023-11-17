@@ -51,8 +51,10 @@ class Predictor():
         try:
             if optimizer == None:
                 self.optimizer = torch.optim.SGD(params=self.model.parameters(), lr=learning_rate)
+                print("Successfully set SGD optimizer")
             else:
                 self.optimizer = optimizer
+                print("Successfully set custom optimizer")
         except Exception as error:
             print("Could not initialize optimizer.", error)
             exit(1)
@@ -73,10 +75,11 @@ class Predictor():
         probabilities: a list of two floats, represents the probability of each class, adds up to 1.
         prediction: The class name of the most likely prediction 'Organic' or 'Recyclable'
         """
+        print('predincting image...')
         self.model.eval()
         result = {}
         image = image.convert("RGB")
-        img_tensor = self.transformer(image).to(self.device).unsqueeze(dim=0)
+        img_tensor = self.transformer(image).unsqueeze(dim=0).to(self.device)
         with torch.inference_mode(): # don't waste time on training parameters
             start = time.time()
             pred = self.model(img_tensor)
@@ -87,18 +90,29 @@ class Predictor():
         result["prediction"] = classes[pred.argmax()]
         return result
     
-    def train(self, prediction: torch.Tensor, label: int) -> dict:
+    def train(self, image, label: str) -> dict:
         """
-        prediction is the *raw tensor* that the predict function returns in the dict as raw_tensor
-        label represents the correct class of the original image
+        image: image to train on
+        label is the correct class of the prediction.
         returned dict:
         loss: a number indicating how badly the model predicted based on the label
         dur: the time the model took to calculate loss, propagate the loss and optimize.
         """
+        label_tensor = None
+        if label == "Organic":
+            label_tensor = torch.Tensor([1, 0]).unsqueeze(dim=0).to(self.device)
+        elif label == "Recyclable":
+            label_tensor = torch.Tensor([0, 1]).unsqueeze(dim=0).to(self.device)
+
+        print('live training...')
+        image = image.convert("RGB")
+        img_tensor = self.transformer(image).unsqueeze(dim=0).to(self.device)
+        print("img_tensor shape: ", img_tensor.shape)
         result = {}
+        # self.model.train()
         start = time.time()
-        self.model.train()
-        loss = self.criterion(prediction, label)
+        pred = self.model(img_tensor) # forward the prediction
+        loss = self.criterion(pred, label_tensor) #TODO: NOT LABEL
         self.optimizer.zero_grad() # reset optimizer
         loss.backward()
         self.optimizer.step() # update the weights
