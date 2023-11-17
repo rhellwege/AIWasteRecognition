@@ -7,10 +7,6 @@ from predict import Predictor
 # initialize globals
 predictor = Predictor("./models/5-64x64-CNN3L-90.pts", device ='cpu')
 
-# cache of previously uploaded image used for live training.
-# key: ip address of client, value: previous image.
-prev_images = {} 
-
 app = Flask(__name__)
 
 @app.route('/')
@@ -18,26 +14,26 @@ def index():
     print(f'Hello {request.remote_addr}')
     return render_template('index.html')
 
-# expects an image field in the request
+# expects an image field in the request in formdata where image is the image file
 @app.route('/predict', methods=['POST'])
 def upload():
-    if 'image' in request.files:
-        image = request.files['image']
-        # Save the uploaded image to a folder (e.g., 'uploads')
-        image = Image.open(image)
-        prev_images[request.remote_addr] = image
-        result = json.dumps(predictor.predict(image))
-        return result, 200, {'Content-Type': 'application/json'} # set content type to json
-    return make_response("No Image uploaded.", 404)
-# This endpoint is only valid if the user has uploaded an image and there is an entry in prev_predictions
-# expects a binary value: 
+    if not 'image' in request.files:
+        return make_response("No Image uploaded.", 404)
+    image = request.files['image']
+    # Save the uploaded image to a folder (e.g., 'uploads')
+    image = Image.open(image)
+    result = json.dumps(predictor.predict(image))
+    return result, 200, {'Content-Type': 'application/json'} # set content type to json
+
+# expects an image and a label in formdata
 @app.route('/train', methods=['PUT'])
 def train_model():
-    if not request.remote_addr in prev_images:
-        return make_response('No previous image associated with your session', 403)
-    data = request.get_json()
-    label = data["label"]
-    result = predictor.train(prev_images[request.remote_addr], label)
+    if not 'image' in request.files:
+        return make_response('no Image uploaded', 404)
+    image = request.files['image']
+    image = Image.open(image)
+    label = request.form.get('label')    
+    result = predictor.train(image, label)
     result = json.dumps(result)
     return result, 200, {'Content-Type': 'application/json'} # set content type to json
 
