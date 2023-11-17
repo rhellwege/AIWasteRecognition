@@ -71,7 +71,6 @@ class Predictor():
         image must be a PIL image.
         returns a dict full of result statistics
         dur: float amount of seconds the model took to forward the prediction
-        raw_tesnsor: the exact tensor the model returns, intended for live training.
         probabilities: a list of two floats, represents the probability of each class, adds up to 1.
         prediction: The class name of the most likely prediction 'Organic' or 'Recyclable'
         """
@@ -85,7 +84,6 @@ class Predictor():
             pred = self.model(img_tensor)
             end = time.time()
         result["dur"] = end - start
-        result["raw_tensor"] = pred
         result["probabilities"] = pred.softmax(dim=1).squeeze().tolist()
         result["prediction"] = classes[pred.argmax()]
         return result

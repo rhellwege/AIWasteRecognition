@@ -1,5 +1,6 @@
 from PIL import Image
-from flask import Flask, render_template, request, make_response, session
+from flask import Flask, render_template, request, make_response
+import json
 
 from predict import Predictor
 
@@ -25,20 +26,20 @@ def upload():
         # Save the uploaded image to a folder (e.g., 'uploads')
         image = Image.open(image)
         prev_images[request.remote_addr] = image
-        result = predictor.predict(image)
-        return str(result)
-    return 'No image uploaded.'
-
+        result = json.dumps(predictor.predict(image))
+        return result, 200, {'Content-Type': 'application/json'}
+    return make_response("No Image uploaded.", 404)
 # This endpoint is only valid if the user has uploaded an image and there is an entry in prev_predictions
 # expects a binary value: 
 @app.route('/train', methods=['PUT'])
-def correct_model():
+def train_model():
     if not request.remote_addr in prev_images:
         return make_response('No previous image associated with your session', 403)
     data = request.get_json()
     label = data["label"]
     result = predictor.train(prev_images[request.remote_addr], label)
-    return result
+    result = json.dumps(result)
+    return result, 200, {'Content-Type': 'application/json'}
 
 if __name__ == '__main__':
     app.run(debug=True)

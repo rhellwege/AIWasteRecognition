@@ -11,8 +11,8 @@
 </head>
 
 <body>
-    <form action="/predict" method="post" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*">
+    <form id="predictForm" action="/predict" method="post" enctype="multipart/form-data">
+        <input id="imageInput" type="file" name="image" accept="image/*">
         <input type="submit" value="Upload">
     </form>
 
