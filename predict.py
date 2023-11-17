@@ -41,6 +41,8 @@ class Predictor():
                 print("CUDA is not enabled on your system. Please enable it to train the model on the GPU.")
                 print("falling back to cpu...")
                 self.device = 'cpu'
+        elif device == 'cpu':
+            print("Using CPU as predictor device.")
         try:
             self.model = load_model_script(model_path).to(self.device)
         except Exception as error:
@@ -66,6 +68,10 @@ class Predictor():
         """
         image must be a PIL image.
         returns a dict full of result statistics
+        dur: float amount of seconds the model took to forward the prediction
+        raw_tesnsor: the exact tensor the model returns, intended for live training.
+        probabilities: a list of two floats, represents the probability of each class, adds up to 1.
+        prediction: The class name of the most likely prediction 'Organic' or 'Recyclable'
         """
         self.model.eval()
         result = {}
@@ -76,33 +82,35 @@ class Predictor():
             pred = self.model(img_tensor)
             end = time.time()
         result["dur"] = end - start
+        result["raw_tensor"] = pred
         result["probabilities"] = pred.softmax(dim=1).squeeze().tolist()
         result["prediction"] = classes[pred.argmax()]
         return result
     
-    def train(self, image, label: int) -> dict:
+    def train(self, prediction: torch.Tensor, label: int) -> dict:
         """
-        image must be a PIL image.
-        label is what the image actually is, 0 means the image is organic, 1
-        means the image is recyclable
-        returns a dict including information about the loss, probabilities, and duration
+        prediction is the *raw tensor* that the predict function returns in the dict as raw_tensor
+        label represents the correct class of the original image
+        returned dict:
+        loss: a number indicating how badly the model predicted based on the label
+        dur: the time the model took to calculate loss, propagate the loss and optimize.
         """
         result = {}
-        image = image.convert("RGB")
-        img_tensor = self.transformer(image).to(self.device).unsqueeze(dim=0)
-        label = torch.tensor_like(label)
-        self.model.train()
         start = time.time()
-        pred = self.model(img_tensor)
+        self.model.train()
+        loss = self.criterion(prediction, label)
+        self.optimizer.zero_grad() # reset optimizer
+        loss.backward()
+        self.optimizer.step() # update the weights
         end = time.time()
+        result["loss"] = loss.item()
         result["dur"] = end - start
-        result["probabilities"] = pred.softmax(dim=1).squeeze().tolist()
-        result["prediction"] = classes[pred.argmax()]
         return result
     
     def explore_predictions(self, dataset_dir, width=3):
         """
-        dataset_dir must be a path to a folder which has O and R subdirectories each with train and test subdirectories with images.
+        dataset_dir must be a path to a folder which has O and R subdirectories
+        each with train and test subdirectories with images.
         """
         self.model.eval()
         fig, axes = plt.subplots(width, width, figsize=(8,8))
