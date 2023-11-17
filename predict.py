@@ -1,4 +1,5 @@
 import torch
+import io
 import torchinfo
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
@@ -119,10 +120,11 @@ class Predictor():
         result["dur"] = end - start
         return result
     
-    def explore_predictions(self, dataset_dir, width=3):
+    def explore_predictions(self, dataset_dir="./data/DATASET/TEST", width=3):
         """
         dataset_dir must be a path to a folder which has O and R subdirectories
         each with train and test subdirectories with images.
+        NOTE: returns a raw bytesIO buffer of a png image
         """
         self.model.eval()
         fig, axes = plt.subplots(width, width, figsize=(8,8))
@@ -146,7 +148,12 @@ class Predictor():
                 ax.axis('off')
         plt.suptitle(f"{(num_correct/(width*width))*100:.2f}%")
         plt.tight_layout()
-        plt.show()
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        plt.clf() # make sure we don't interfere with main thread
+        plt.close('all')
+        return buffer
 
     def print_arch(self):
         torchinfo.summary(model=self.model, input_size=[1, 3, self.model.image_width, self.model.image_width])

@@ -1,6 +1,8 @@
 from PIL import Image
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, send_file
 import json
+import io
+import threading
 
 from predict import Predictor
 
@@ -8,6 +10,7 @@ from predict import Predictor
 predictor = Predictor("./models/5-64x64-CNN3L-90.pts", device ='cpu')
 
 app = Flask(__name__)
+plt_mutex = threading.Lock() # block the main thread whenever matplot lib is generating an image
 
 @app.route('/')
 def index():
@@ -36,6 +39,14 @@ def train_model():
     result = predictor.train(image, label)
     result = json.dumps(result)
     return result, 200, {'Content-Type': 'application/json'} # set content type to json
+
+@app.route('/explore-predictions', methods=['GET'])
+def get_explore_image():
+    with app.app_context():
+        with plt_mutex:
+            imgbytes = predictor.explore_predictions(width=5)
+    return send_file(imgbytes, mimetype='image/png')
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
