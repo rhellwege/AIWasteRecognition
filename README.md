@@ -4,14 +4,22 @@ The server responds with the neural network's decision of whether the image cont
 and the user can then correct the NN live.
 
 ## Getting Started
+Preferred method:
+Download and install docker https://www.docker.com/get-started/
+Then run  
+```
+$ docker compose up --build
+```
+To start the server
+and docker compose down to clean up just in case. 
+
+## Manual
 Make sure you have python 3.11 and pip installed, then install the dependencies with this command:
 ```code
 $ pip3 install -r requirements.txt
 ```
-
-## Download Dataset
-If you want the dataset, you can download it here: https://www.kaggle.com/datasets/techsash/waste-classification-data/download?datasetVersionNumber=1
-and make sure you extract it into a data/ directory
+## Unzip
+You can unzip the test_data or download the kaggle dataset from https://www.kaggle.com/datasets/techsash/waste-classification-data/download?datasetVersionNumber=1
 
 ## How to run:
 To run the server, use this command:
