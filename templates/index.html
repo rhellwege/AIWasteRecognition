@@ -16,10 +16,15 @@
         <input type="submit" value="Predict">
     </form>
 
+    <h2 id="currentPrediction">
+    </h2>
+
     <div id="trainDiv">
       <button type="button" id="organic">Organic</button>
       <button type="button" id="recyclable">Recyclable</button>
     </div>
+
+    <h3 id="currentLoss"></h3>
 
     <div>
       <button type="button" id="refreshButton" onclick="document.getElementById('imageExplore').src='/explore-predictions?' + new Date().getTime()">Refresh</button>

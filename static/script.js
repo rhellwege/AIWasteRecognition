@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const predictForm = document.getElementById('predictForm');
   const imageInput = document.getElementById('imageInput');
   const trainDiv = document.getElementById('trainDiv');
+  const predictionH2 = document.getElementById('currentPrediction');
 
   trainDiv.style.display = "none";
 
@@ -28,7 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
           return resp.json();
         })
         .then(data => {
-          console.log(data)
+          const percentage = Math.max(data.probabilities[0], data.probabilities[1]) * 100;
+          predictionH2.innerText = `I am ${percentage}% sure that this is ${data.prediction}`;
+          console.log(data);
         })
     }
   });
@@ -58,6 +61,7 @@ function train(imageInput, label) {
   if (imageInput.files.length > 0) {
     const imageFile = imageInput.files[0];
     const formData = new FormData();
+    const trainH3 = document.getElementById('currentLoss');
     formData.append('image', imageFile);
     formData.append('label', label)
     fetch('/train', {
@@ -68,7 +72,8 @@ function train(imageInput, label) {
         return resp.json();
       })
       .then(data => {
-        console.log(data)
+        trainH3.innerText = `Training Loss: ${data.loss}`;
+        console.log(data);
       })
   }
 }

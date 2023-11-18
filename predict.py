@@ -128,10 +128,10 @@ class Predictor():
         NOTE: returns a raw bytesIO buffer of a png image
         """
         self.model.eval()
+        start = time.time()
         fig, axes = plt.subplots(width, width, figsize=(8,8))
         test_dataset = torchvision.datasets.ImageFolder(dataset_dir, self.transformer)
         num_images = width*width
-        print(f"[PREDICTOR] :: exploring predictions on {num_images}")
         test_loader = DataLoader(dataset=test_dataset, batch_size=num_images, shuffle=True, num_workers=0)
         num_correct = 0
         with torch.inference_mode():
@@ -157,6 +157,8 @@ class Predictor():
         buffer.seek(0)
         plt.clf() # make sure we don't interfere with main thread
         plt.close('all')
+        end = time.time()
+        print(f"[PREDICTOR] :: exploring predictions on {num_images} images. took {end-start} seconds")
         return buffer
 
 
