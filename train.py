@@ -1,5 +1,6 @@
 # note: some of the filenames are too long in the csv, so I just deleted them.
 import torch
+import sys
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
 import torchvision
@@ -11,6 +12,7 @@ from tqdm import tqdm
 import pandas as pd
 from PIL import Image
 import os
+import signal
 
 print("This script is intended to be run on a machine with cuda support to")
 print("train models once and use them afterwards.")
@@ -161,10 +163,17 @@ train_loader      = DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shu
 validation_loader = DataLoader(dataset=test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=0)
 
 model = CPUModel(input_shape=3, hidden_units=HIDDEN_UNITS, output_shape=2, dropout_p=DROPOUT_P, image_width=IMAGE_WIDTH).to(device)
+
 # torchinfo.summary(model=model, input_size=[1, 3, IMAGE_WIDTH, IMAGE_WIDTH])
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(params=model.parameters(), lr=INITIAL_LEARNING_RATE)
 # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
+#
+# setup save on quit:
+def quit_handler(sig, frame):
+    save_model(model=model, epochs=EPOCHS, image_width=IMAGE_WIDTH, val_acc=val_acc)
+    sys.exit(0)
+signal.signal(signal.SIGINT, quit_handler)
 
 train_loss = None
 train_acc = 0
@@ -201,8 +210,8 @@ for epoch in range(EPOCHS):
             val_acc += accuracy_fn(y_true=labels_val, y_pred=val_pred.argmax(dim=1))
         val_loss /= len(validation_loader)
         val_acc /= len(validation_loader)
-        if val_acc >= 90:
-            save_model(model=model.to('cpu'), epochs=EPOCHS, image_width=IMAGE_WIDTH, val_acc=val_acc)
+        if val_acc >= 80:
+            save_model(model=model.to('cpu'), epochs=epoch, image_width=IMAGE_WIDTH, val_acc=val_acc)
     # scheduler.step(val_loss) # update the learning rate
     validation_end = time.time()
     print(f"Epoch {epoch} Complete | Train loss: {train_loss:.4f}, Train acc: {train_acc:.2f}% | Test loss: {val_loss:.4f}, Test acc: {val_acc:.2f}% || Training Dur: {train_end-train_start:.2f}s | Validation Dur: {validation_end-validation_start:.2f}s")

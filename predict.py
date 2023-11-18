@@ -37,7 +37,6 @@ class Predictor():
         """
         self.device = device
         if device == 'cuda':
-            # cuda_info()
             if not torch.cuda.is_available():
                 print("CUDA is not enabled on your system. Please enable it to train the model on the GPU.")
                 print("falling back to cpu...")
@@ -120,7 +119,7 @@ class Predictor():
         result["dur"] = end - start
         return result
     
-    def explore_predictions(self, dataset_dir="./data/DATASET/TEST", width=3):
+    def explore_predictions(self, dataset_dir="./test_data/", width=3):
         """
         dataset_dir must be a path to a folder which has O and R subdirectories
         each with train and test subdirectories with images.
