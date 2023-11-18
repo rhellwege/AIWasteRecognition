@@ -38,10 +38,17 @@ def train_model():
     result = json.dumps(result)
     return result, 200, {'Content-Type': 'application/json'} # set content type to json
 
+# returns bytes of a png image
 @app.route('/explore-predictions', methods=['GET'])
 def get_explore_image():
     imgbytes = predictor.explore_predictions(width=5)
     return send_file(imgbytes, mimetype='image/png')
+
+@app.route('/reload-model', methods=['PUT'])
+def reload_model_endpoint():
+    global predictor
+    predictor = Predictor("./models/6-64x64-CPUModel-86.pts", device = 'cpu')
+    return 'Reloaded model.'
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")

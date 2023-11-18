@@ -33,6 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  const reloadBtn = document.getElementById('reloadButton');
+  reloadBtn.addEventListener('click', () => {
+    fetch('/reload-model', {
+      method: 'PUT'
+    })
+      .then(resp => resp.text())
+      .then(data => console.log(data));
+  });
+
   const organicBtn = document.getElementById('organic');
   const recyclableBtn = document.getElementById('recyclable');
   // training event listeners.

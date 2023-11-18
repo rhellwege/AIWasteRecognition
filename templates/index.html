@@ -20,6 +20,13 @@
       <button type="button" id="organic">Organic</button>
       <button type="button" id="recyclable">Recyclable</button>
     </div>
+
+    <div>
+      <button type="button" id="refreshButton" onclick="document.getElementById('imageExplore').src='/explore-predictions?' + new Date().getTime()">Refresh</button>
+      <img width=600 src="/explore-predictions" id="imageExplore" alt="">
+    </div>
+
+    <button type="button" id="reloadButton">Reload Model</button>
 </body>
 
 
