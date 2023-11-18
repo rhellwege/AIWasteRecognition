@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return resp.json();
         })
         .then(data => {
-          const percentage = Math.max(data.probabilities[0], data.probabilities[1]) * 100;
+          const percentage = (Math.max(data.probabilities[0], data.probabilities[1]) * 100).toFixed(2);
           predictionH2.innerText = `I am ${percentage}% sure that this is ${data.prediction}`;
           console.log(data);
         })
@@ -72,7 +72,7 @@ function train(imageInput, label) {
         return resp.json();
       })
       .then(data => {
-        trainH3.innerText = `Training Loss: ${data.loss}`;
+        trainH3.innerText = `Training Loss: ${data.loss.toFixed(4)}`;
         console.log(data);
       })
   }

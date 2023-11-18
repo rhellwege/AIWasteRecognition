@@ -4,9 +4,11 @@ import json
 
 from predict import Predictor
 
+default_model = "./models/3-64x64-CPUModel-89.pts"
+
 # initialize globals
 # predictor = Predictor("./models/5-64x64-CNN3L-90.pts", device ='cpu')
-predictor = Predictor("./models/6-64x64-CPUModel-86.pts", device ='cpu')
+predictor = Predictor(default_model, device ='cpu')
 
 app = Flask(__name__)
 
@@ -49,7 +51,7 @@ def get_explore_image():
 @app.route('/reload-model', methods=['PUT'])
 def reload_model_endpoint():
     global predictor
-    predictor = Predictor("./models/6-64x64-CPUModel-86.pts", device = 'cpu')
+    predictor = Predictor(default_model, device = 'cpu')
     print("[SERVER] :: ", 'reseting predictor weights')
     return 'Reloaded model.'
 

@@ -105,7 +105,6 @@ class Predictor():
         print(f'[PREDICTOR] :: Live training image as {label}')
         image = image.convert("RGB")
         img_tensor = self.transformer(image).unsqueeze(dim=0).to(self.device)
-        print("img_tensor shape: ", img_tensor.shape)
         result = {}
         # self.model.train()
         start = time.time()
@@ -138,6 +137,8 @@ class Predictor():
             images, labels = next(iter(test_loader))
             preds = self.model(images.to(self.device))
             pred_list = [classes[x.argmax()] for x in preds]
+            loss = self.criterion(preds, labels)
+
             label_list = [classes[x] for x in labels.to('cpu')]
             image_list = [x.squeeze().permute(1,2,0) for x in images.to('cpu')]
             for i in range(width ** 2):
@@ -150,7 +151,7 @@ class Predictor():
                 color = 'green' if correct else 'red'
                 ax.set_title(f"{pred_list[i]}", color=color)
                 ax.axis('off')
-        plt.suptitle(f"{(num_correct/(width*width))*100:.2f}%")
+        plt.suptitle(f"{(num_correct/(width*width))*100:.2f}% Accurate | Loss: {loss.item():.4f}")
         plt.tight_layout()
         buffer = io.BytesIO()
         plt.savefig(buffer, format='png')
@@ -158,7 +159,7 @@ class Predictor():
         plt.clf() # make sure we don't interfere with main thread
         plt.close('all')
         end = time.time()
-        print(f"[PREDICTOR] :: exploring predictions on {num_images} images. took {end-start} seconds")
+        print(f"[PREDICTOR] :: exploring predictions on {num_images} images. took {end-start} seconds, {(num_correct/(width*width))*100:.2f}% Accurate | Loss: {loss.item():.4f}")
         return buffer
 
 
