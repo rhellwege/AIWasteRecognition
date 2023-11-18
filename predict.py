@@ -93,8 +93,8 @@ class Predictor():
         image: image to train on
         label is the correct class of the prediction.
         returned dict:
+        same as predict
         loss: a number indicating how badly the model predicted based on the label
-        dur: the time the model took to calculate loss, propagate the loss and optimize.
         """
         label_tensor = None
         if label == "Organic":
@@ -117,6 +117,8 @@ class Predictor():
         end = time.time()
         result["loss"] = loss.item()
         result["dur"] = end - start
+        result["probabilities"] = pred.softmax(dim=1).squeeze().tolist()
+        result["prediction"] = classes[pred.argmax()]
         return result
     
     def explore_predictions(self, dataset_dir="./test_data/", width=3):
