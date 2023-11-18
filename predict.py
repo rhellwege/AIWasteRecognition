@@ -130,22 +130,25 @@ class Predictor():
         self.model.eval()
         fig, axes = plt.subplots(width, width, figsize=(8,8))
         test_dataset = torchvision.datasets.ImageFolder(dataset_dir, self.transformer)
-        test_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=True, num_workers=0)
+        num_images = width*width
+        print(f"[PREDICTOR] :: exploring predictions on {num_images}")
+        test_loader = DataLoader(dataset=test_dataset, batch_size=num_images, shuffle=True, num_workers=0)
         num_correct = 0
         with torch.inference_mode():
+            images, labels = next(iter(test_loader))
+            preds = self.model(images.to(self.device))
+            pred_list = [classes[x.argmax()] for x in preds]
+            label_list = [classes[x] for x in labels.to('cpu')]
+            image_list = [x.squeeze().permute(1,2,0) for x in images.to('cpu')]
             for i in range(width ** 2):
-                image, label = next(iter(test_loader))
-                label_true = classes[label.item()]
-                pred = self.model(image.to(self.device))
-                pred_label = classes[pred.argmax()]
                 row = i // width
                 col = i % width
                 ax = axes[row, col]
-                ax.imshow(image.squeeze().permute(1,2,0))
-                correct = pred_label == label_true 
+                ax.imshow(image_list[i])
+                correct = pred_list[i] == label_list[i]
                 num_correct += correct
                 color = 'green' if correct else 'red'
-                ax.set_title(f"{pred_label}", color=color)
+                ax.set_title(f"{pred_list[i]}", color=color)
                 ax.axis('off')
         plt.suptitle(f"{(num_correct/(width*width))*100:.2f}%")
         plt.tight_layout()

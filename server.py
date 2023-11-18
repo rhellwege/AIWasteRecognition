@@ -24,6 +24,7 @@ def upload():
     # Save the uploaded image to a folder (e.g., 'uploads')
     image = Image.open(image)
     result = json.dumps(predictor.predict(image))
+    print("[SERVER] :: ", result)
     return result, 200, {'Content-Type': 'application/json'} # set content type to json
 
 # expects an image and a label in formdata
@@ -36,6 +37,7 @@ def train_model():
     label = request.form.get('label')    
     result = predictor.train(image, label)
     result = json.dumps(result)
+    print("[SERVER] :: ", result)
     return result, 200, {'Content-Type': 'application/json'} # set content type to json
 
 # returns bytes of a png image
@@ -48,6 +50,7 @@ def get_explore_image():
 def reload_model_endpoint():
     global predictor
     predictor = Predictor("./models/6-64x64-CPUModel-86.pts", device = 'cpu')
+    print("[SERVER] :: ", 'reseting predictor weights')
     return 'Reloaded model.'
 
 if __name__ == '__main__':
