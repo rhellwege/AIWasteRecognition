@@ -1,5 +1,5 @@
 import torch
-import torchinfo
+import io
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
 import torchvision
@@ -24,26 +24,43 @@ def cuda_info():
         print(f"Name of current CUDA device: {torch.cuda.get_device_name(cuda_id)}")
 
 def load_model_script(model_path: str) -> nn.Module:
+    print(f"Loading model: {model_path}")
     return torch.jit.load(model_path)
 
 class Predictor():
-    def __init__(self, model_path: str, device='cpu'):
+    def __init__(self, model_path: str, device='cpu', optimizer=None, criterion=nn.CrossEntropyLoss(), learning_rate=0.001):
         """
         model_path must be a valid path to a .pts file (pytorch script)
+        optimizer is a torch.optim.Optimizer, if nothing is passed, it defaults to torch.Optim.SGD
+        learning_rate should be small if you don't want to mess up the model too much
         if the model is small, device should be cpu (it is faster)
         """
         self.device = device
         if device == 'cuda':
-            # cuda_info()
             if not torch.cuda.is_available():
                 print("CUDA is not enabled on your system. Please enable it to train the model on the GPU.")
                 print("falling back to cpu...")
                 self.device = 'cpu'
+        elif device == 'cpu':
+            print("Using CPU as predictor device.")
         try:
             self.model = load_model_script(model_path).to(self.device)
         except Exception as error:
             print("Could not load model.", error)
             exit(1)
+        try:
+            if optimizer == None:
+                self.optimizer = torch.optim.SGD(params=self.model.parameters(), lr=learning_rate)
+                print("Successfully set SGD optimizer")
+            else:
+                self.optimizer = optimizer
+                print("Successfully set custom optimizer")
+        except Exception as error:
+            print("Could not initialize optimizer.", error)
+            exit(1)
+        self.criterion = criterion
+        self.learning_rate = learning_rate
+
         self.transformer = transforms.Compose([
             transforms.Resize(size=(self.model.image_width, self.model.image_width)),
             transforms.ToTensor(),
@@ -53,11 +70,15 @@ class Predictor():
         """
         image must be a PIL image.
         returns a dict full of result statistics
+        dur: float amount of seconds the model took to forward the prediction
+        probabilities: a list of two floats, represents the probability of each class, adds up to 1.
+        prediction: The class name of the most likely prediction 'Organic' or 'Recyclable'
         """
+        print('[PREDICTOR] :: Predicting image...')
         self.model.eval()
         result = {}
         image = image.convert("RGB")
-        img_tensor = self.transformer(image).to(self.device).unsqueeze(dim=0)
+        img_tensor = self.transformer(image).unsqueeze(dim=0).to(self.device)
         with torch.inference_mode(): # don't waste time on training parameters
             start = time.time()
             pred = self.model(img_tensor)
@@ -67,9 +88,42 @@ class Predictor():
         result["prediction"] = classes[pred.argmax()]
         return result
     
-    def explore_predictions(self, dataset_dir, width=3):
+    def train(self, image, label: str) -> dict:
         """
-        dataset_dir must be a path to a folder which has O and R subdirectories each with train and test subdirectories with images.
+        image: image to train on
+        label is the correct class of the prediction.
+        returned dict:
+        loss: a number indicating how badly the model predicted based on the label
+        dur: the time the model took to calculate loss, propagate the loss and optimize.
+        """
+        label_tensor = None
+        if label == "Organic":
+            label_tensor = torch.Tensor([1, 0]).unsqueeze(dim=0).to(self.device)
+        elif label == "Recyclable":
+            label_tensor = torch.Tensor([0, 1]).unsqueeze(dim=0).to(self.device)
+
+        print(f'[PREDICTOR] :: Live training image as {label}')
+        image = image.convert("RGB")
+        img_tensor = self.transformer(image).unsqueeze(dim=0).to(self.device)
+        print("img_tensor shape: ", img_tensor.shape)
+        result = {}
+        # self.model.train()
+        start = time.time()
+        pred = self.model(img_tensor) # forward the prediction
+        loss = self.criterion(pred, label_tensor) #TODO: NOT LABEL
+        self.optimizer.zero_grad() # reset optimizer
+        loss.backward()
+        self.optimizer.step() # update the weights
+        end = time.time()
+        result["loss"] = loss.item()
+        result["dur"] = end - start
+        return result
+    
+    def explore_predictions(self, dataset_dir="./test_data/", width=3):
+        """
+        dataset_dir must be a path to a folder which has O and R subdirectories
+        each with train and test subdirectories with images.
+        NOTE: returns a raw bytesIO buffer of a png image
         """
         self.model.eval()
         fig, axes = plt.subplots(width, width, figsize=(8,8))
@@ -93,10 +147,13 @@ class Predictor():
                 ax.axis('off')
         plt.suptitle(f"{(num_correct/(width*width))*100:.2f}%")
         plt.tight_layout()
-        plt.show()
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        plt.clf() # make sure we don't interfere with main thread
+        plt.close('all')
+        return buffer
 
-    def print_arch(self):
-        torchinfo.summary(model=self.model, input_size=[1, 3, self.model.image_width, self.model.image_width])
 
 def explore_dataset(dataset_dir, width=3):
     """

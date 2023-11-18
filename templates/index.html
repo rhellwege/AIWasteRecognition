@@ -11,16 +11,16 @@
 </head>
 
 <body>
-
-</body>
-<head>
-    <title>Upload Image</title>
-</head>
-<body>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*">
-        <input type="submit" value="Upload">
+    <form id="predictForm" action="/predict" method="post" enctype="multipart/form-data">
+        <input id="imageInput" type="file" name="image" accept="image/*">
+        <input type="submit" value="Predict">
     </form>
+
+    <div id="trainDiv">
+      <button type="button" id="organic">Organic</button>
+      <button type="button" id="recyclable">Recyclable</button>
+    </div>
 </body>
+
 
 </html>

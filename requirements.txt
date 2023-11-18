@@ -1,5 +1,6 @@
 Flask==3.0.0
-torch
-torchvision
-matplotlib
+flask_cors==4.0.0
+matplotlib==3.8.1
+pandas==2.1.3
 Pillow==10.1.0
+tqdm==4.66.1
