@@ -2,38 +2,229 @@
 <html lang="en">
 
 <head>
-  <title>AI Waste Recognition</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script type="text/javascript" src="{{ url_for('static', filename = 'script.js') }}">
-  </script>
-  <link rel="stylesheet" type="css" href="{{ url_for('static', filename = 'style.css') }}">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>AIWasteDetection</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  
+    <link href="{{ url_for('static', filename='assets/apple-touch-icon.png')}}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{{ url_for('static', filename='assets/vendor/animate.css/animate.min.css')}}" rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
+
+  
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  
+  
+  <!-- Template Main CSS File -->
+  <link href="{{ url_for('static', filename='assets/style.css')}}" rel="stylesheet">
+  <script src="bootstrap.bundle.min.js"></script>
+  
+
 </head>
 
 <body>
-    <form id="predictForm" action="/predict" method="post" enctype="multipart/form-data">
-        <input id="imageInput" type="file" name="image" accept="image/*">
-        <input type="submit" value="Predict">
-    </form>
 
-    <h2 id="currentPrediction">
-    </h2>
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
 
-    <div id="trainDiv">
-      <h3>Train Me</h3>
-      <button type="button" id="organic">Organic</button>
-      <button type="button" id="recyclable">Recyclable</button>
+      <h1 class="logo me-auto"><a href="index.html"><span>AI</span>WasteClassification</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li><a href="index.html" class="active">Project</a></li>
+          <li><a href="Meet_The_Team.html">Meet The Team</a></li>
+
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+      <div class="header-social-links d-flex">
+        <a href="#" class="twitter"><i class="bi bi-github"></i></a>
+      
+      </div>
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero">
+    <img width=600 src="/explore-predictions" id="imageExplore" alt="">
+    <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
+
+      <div class="carousel-inner" role="listbox">
+
+        <!-- Slide 1 -->
+          <div class="carousel-item active" style="background-image: url({{ url_for('static', filename='assets/slide-1.jpg)')}};">
+          <div class="carousel-container">
+            <div class="carousel-content animate__animated animate__fadeInUp">
+              <h2>Learn About <span>Convolutional Neural Networks</span></h2>
+              <p></p>
+              <div class="text-center"><a href="explore_model" class="btn-get-started">Explore The Model</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section><!-- End Hero -->
+
+  
+  <div class="container py-5">
+
+    <!-- For demo purpose -->
+    <header class="text-black text-center">
+        <h1 class="display-4">Upload An Image</h1>
+        <p class="lead mb-0">Upload an image and check for the accuracy</p>
+       <br>
+        <img src="https://media.tenor.com/t5DMW5PI8mgAAAAi/loading-green-loading.gif" alt="" width="150" class="mb-4">
+    </header>
+
+
+    <div class="row py-4">
+        <div class="col-lg-6 mx-auto">
+
+            <!-- Upload image input-->
+            <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+                <input id="upload" type="file" onchange="readURL(this);" class="form-control border-0">
+                <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose file</label>
+                <div class="input-group-append">
+                    <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">Choose file</small></label>
+                </div>
+            </div>
+
+            <!-- Uploaded image area-->
+            <p class="font-italic text-black text-center">The image uploaded will be rendered inside the box below.</p>
+            <div class="image-area mt-4"><img id="imageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
+
+        </div>
     </div>
 
-    <h3 id="currentLoss"></h3>
+    <!-- <div class="container"> -->
 
-    <div>
-      <button type="button" id="refreshButton" onclick="document.getElementById('imageExplore').src='/explore-predictions?' + new Date().getTime()">Refresh</button>
-      <img width=600 src="/explore-predictions" id="imageExplore" alt="">
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#myModal"><i class="bi bi-chat"></i>  Train</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"> Live Train The Model</h4>
+        </div>
+        <div class="modal-body">
+          <p>Is it accurate or not</p>
+        </div>
+        <div>
+          <button type="button" class="btn btn-default btn-success" style="margin-left: 24px" data-dismiss="modal">Yes</button> 
+          <button type="button" class="btn btn-default btn-danger" style="margin-left: 12px" data-dismiss="modal">No</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
     </div>
+    
+  </div>
+  
+<!-- </div> -->
 
-    <button type="button" id="reloadButton">Reload Model</button>
+
+</div>
+
+
+
+
+
+
+
+
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+    <div class="container d-md-flex py-4">
+
+      <div class="me-md-auto text-center text-md-start">
+        <div class="copyright">
+          &copy; Copyright <strong><span>Company</span></strong>. All Rights Reserved
+        </div>
+        <div class="credits">
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Licensing information: https://bootstrapmade.com/license/ -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/company-free-html-bootstrap-template/ -->
+        
+        </div>
+      </div>
+      <div class="social-links text-center text-md-right pt-3 pt-md-0">
+        <a href="#" class="twitter"><i class="bi bi-github"></i></a>
+        <a href="Meet_The_Team.html">Team</a>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+ 
+
 </body>
 
 
+
+<script>
+ 
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#imageResult').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$(function () {
+    $('#upload').on('change', function () {
+        readURL(input);
+    });
+});
+
+var input = document.getElementById( 'upload' );
+var infoArea = document.getElementById( 'upload-label' );
+
+input.addEventListener( 'change', showFileName );
+function showFileName( event ) {
+  var input = event.srcElement;
+  var fileName = input.files[0].name;
+  infoArea.textContent = 'File name: ' + fileName;
+}
+
+var myModal = document.getElementById('myModal')
+var myInput = document.getElementById('myInput')
+
+myModal.addEventListener('shown.bs.modal', function () {
+  myInput.focus()
+})
+</script>
 </html>
