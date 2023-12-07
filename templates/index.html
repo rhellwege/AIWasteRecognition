@@ -86,73 +86,93 @@
         <!-- End Header -->
 
         <!-- main content -->
-        <div class="mt-5 container py-5">
+        <div class="mt-5 container py-5 mx-auto px-5">
             <!-- Controls Row -->
-            <div class="row">
+            <div class="row gx-5">
                 <!-- Model Col -->
                 <div class="col mx-auto">
                     <header class="text-black text-center">
-                        <h2 class="display-4">Model Performance</h2>
-                        <br />
+                        <!-- <h2 class="display-4">Performance</h2> -->
                     </header>
-                    <button
-                        id="reloadButton"
-                        type="button"
-                        class="btn btn-danger btn-md"
-                    >
+                    <h2 id="">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="32"
+                            height="32"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             stroke-width="2"
                             stroke-linecap="round"
                             stroke-linejoin="round"
-                            class="lucide lucide-list-restart"
-                        >
-                            <path d="M21 6H3" />
-                            <path d="M7 12H3" />
-                            <path d="M7 18H3" />
-                            <path
-                                d="M12 18a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L11 14"
-                            />
-                            <path d="M11 10v4h4" />
-                        </svg>
-                        Reload Weights
-                    </button>
-                    <button
-                        class="btn btn-primary btn-md"
-                        type="button"
-                        id="refreshButton"
-                        onclick="reloadGrid()"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="lucide lucide-rotate-cw"
+                            class="lucide lucide-settings"
                         >
                             <path
-                                d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"
+                                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
                             />
-                            <path d="M21 3v5h-5" />
+                            <circle cx="12" cy="12" r="3" />
                         </svg>
-                        New Grid
-                    </button>
+                        Model Controls
+                    </h2>
+                    <div class="d-flex py-2">
+                        <button
+                            id="reloadButton"
+                            type="button"
+                            class="btn btn-danger btn-md"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-list-restart"
+                            >
+                                <path d="M21 6H3" />
+                                <path d="M7 12H3" />
+                                <path d="M7 18H3" />
+                                <path
+                                    d="M12 18a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L11 14"
+                                />
+                                <path d="M11 10v4h4" />
+                            </svg>
+                            Reload Weights
+                        </button>
+                        <button
+                            class="mx-2 btn btn-warning btn-md"
+                            type="button"
+                            id="refreshButton"
+                            onclick="reloadGrid()"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-rotate-cw"
+                            >
+                                <path
+                                    d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"
+                                />
+                                <path d="M21 3v5h-5" />
+                            </svg>
+                            New Grid
+                        </button>
+                    </div>
                 </div>
                 <!-- Upload Col -->
                 <div class="col mx-auto">
                     <header class="text-black text-center">
-                        <h1 class="display-4">Predict Image</h1>
-                        <br />
+                        <!-- <h2 class="display-4">Predict Image</h2> -->
                     </header>
                     <h2 id="prediction-results">Upload an image to see results.</h2>
                     <!-- Upload image input-->
@@ -175,9 +195,7 @@
                                 for="upload"
                                 class="btn btn-light m-0 rounded-pill px-4"
                             >
-                                <i
-                                    class="fa fa-cloud-upload mr-2 text-muted"
-                                ></i
+                                <i class="fa fa-cloud-upload mr-2 text-muted"></i
                                 ><small
                                     class="text-uppercase font-weight-bold text-muted"
                                     >Choose file</small
@@ -188,13 +206,13 @@
                 </div>
             </div>
             <!-- Display Row -->
-            <div class="row">
+            <div class="row gx-5">
                 <div class="col mx-auto">
                     <img
                         class="img-fluid rounded shadow-sm mx-auto d-block"
                         src="#"
-                        width=100%
-                        height=100%
+                        width="100%"
+                        height="100%"
                         id="imageExplore"
                         alt=""
                     />
@@ -206,8 +224,8 @@
                             class="img-fluid rounded shadow-sm mx-auto d-block"
                             id="imageResult"
                             src="#"
-                            width=100%
-                            height=100%
+                            width="100%"
+                            height="100%"
                             alt=""
                         />
                     </div>
@@ -215,71 +233,99 @@
             </div>
 
             <!-- Training row -->
-            <div class="row">
-                <div class="col mx-auto"></div>
+            <div class="mt-1 row gx-5">
+                <div class="col mx-auto">
+                    <h2 id="training-loss" class=""></h2>
+                </div>
                 <div class="col mx-auto">
                     <div id="trainDiv">
-                        <button
-                            id="organic"
-                            type="button"
-                            class="btn btn-success btn-md"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="lucide lucide-citrus"
-                            >
-                                <path
-                                    d="M21.66 17.67a1.08 1.08 0 0 1-.04 1.6A12 12 0 0 1 4.73 2.38a1.1 1.1 0 0 1 1.61-.04z"
-                                />
-                                <path d="M19.65 15.66A8 8 0 0 1 8.35 4.34" />
-                                <path d="m14 10-5.5 5.5" />
-                                <path d="M14 17.85V10H6.15" />
-                            </svg>
-                            Organic
-                        </button>
+                        <div class="d-flex">
+                            <h2 class="my-auto">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="32"
+                                    height="32"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-book-marked"
+                                >
+                                    <path
+                                        d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+                                    />
+                                    <polyline points="10 2 10 10 13 7 16 10 16 2" />
+                                </svg>
+                                Train as
+                            </h2>
+                            <div class="mx-2 d-flex py-2">
+                                <button
+                                    id="organic"
+                                    type="button"
+                                    class="btn btn-success btn-md"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="lucide lucide-citrus"
+                                    >
+                                        <path
+                                            d="M21.66 17.67a1.08 1.08 0 0 1-.04 1.6A12 12 0 0 1 4.73 2.38a1.1 1.1 0 0 1 1.61-.04z"
+                                        />
+                                        <path d="M19.65 15.66A8 8 0 0 1 8.35 4.34" />
+                                        <path d="m14 10-5.5 5.5" />
+                                        <path d="M14 17.85V10H6.15" />
+                                    </svg>
+                                    Organic
+                                </button>
 
-                        <button
-                            id="recyclable"
-                            type="button"
-                            class="btn btn-primary btn-md"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="lucide lucide-recycle"
-                            >
-                                <path
-                                    d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"
-                                />
-                                <path
-                                    d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"
-                                />
-                                <path d="m14 16-3 3 3 3" />
-                                <path d="M8.293 13.596 7.196 9.5 3.1 10.598" />
-                                <path
-                                    d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"
-                                />
-                                <path
-                                    d="m13.378 9.633 4.096 1.098 1.097-4.096"
-                                />
-                            </svg>
-                            Recycle
-                        </button>
+                                <button
+                                    id="recyclable"
+                                    type="button"
+                                    class="mx-2 btn btn-primary btn-md"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="lucide lucide-recycle"
+                                    >
+                                        <path
+                                            d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"
+                                        />
+                                        <path
+                                            d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"
+                                        />
+                                        <path d="m14 16-3 3 3 3" />
+                                        <path
+                                            d="M8.293 13.596 7.196 9.5 3.1 10.598"
+                                        />
+                                        <path
+                                            d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"
+                                        />
+                                        <path
+                                            d="m13.378 9.633 4.096 1.098 1.097-4.096"
+                                        />
+                                    </svg>
+                                    Recycle
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -299,9 +345,7 @@
                         <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/company-free-html-bootstrap-template/ -->
                     </div>
                 </div>
-                <div
-                    class="social-links text-center text-md-right pt-3 pt-md-0"
-                >
+                <div class="social-links text-center text-md-right pt-3 pt-md-0">
                     <a
                         href="https://github.com/rhellwege/AIWasteRecognition"
                         class="twitter"
@@ -318,6 +362,7 @@
         function readURL(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
+                $("#prediction-results").html(`...`);
                 reader.onload = function (e) {
                     // display the uploaded image
                     $("#imageResult").attr("src", e.target.result);
@@ -325,26 +370,30 @@
                 reader.readAsDataURL(input.files[0]);
                 // upload to /predict endpoint
                 const formData = new FormData();
-                formData.append('image', input.files[0]);
-                fetch('/predict', {
-                  method: 'POST',
-                  body: formData
+                formData.append("image", input.files[0]);
+                fetch("/predict", {
+                    method: "POST",
+                    body: formData,
                 })
-                .then(resp => {
-                  return resp.json();
-                })
-                .then(data => {
-                  const percentage = (Math.max(data.probabilities[0], data.probabilities[1]) * 100).toFixed(2);
-                  let predSpan = "";
-                  if (data.prediction === "Recycle") {
-                    predSpan = "<span style='color: blue'>Recycle</span>";
-                  }
-                  else {
-                    predSpan = "<span style='color: green'>Organic</span>";
-                  }
-                  $("#prediction-results").html(`I'm <span style='color: gold'>${percentage}%</span> sure this is ${predSpan}`);
-                  console.log(data);
-                })
+                    .then((resp) => {
+                        return resp.json();
+                    })
+                    .then((data) => {
+                        const percentage = (
+                            Math.max(data.probabilities[0], data.probabilities[1]) *
+                            100
+                        ).toFixed(2);
+                        let predSpan = "";
+                        if (data.prediction === "Recycle") {
+                            predSpan = "<span style='color: blue'>Recycle</span>";
+                        } else {
+                            predSpan = "<span style='color: green'>Organic</span>";
+                        }
+                        $("#prediction-results").html(
+                            `I'm <span style='color: gold'>${percentage}%</span> sure this is ${predSpan}`,
+                        );
+                        console.log(data);
+                    });
             }
         }
         const input = document.getElementById("upload");
@@ -356,17 +405,17 @@
                 readURL(input);
             });
         });
-        const reloadBtn = document.getElementById('reloadButton');
-        reloadBtn.addEventListener('click', () => {
-          fetch('/reload-model', {
-            method: 'PUT'
-          })
-            .then(resp => resp.text())
-            .then(data => {
-              console.log(data);
-              readURL(input);
-              reloadGrid();
-            });
+        const reloadBtn = document.getElementById("reloadButton");
+        reloadBtn.addEventListener("click", () => {
+            fetch("/reload-model", {
+                method: "PUT",
+            })
+                .then((resp) => resp.text())
+                .then((data) => {
+                    console.log(data);
+                    readURL(input);
+                    reloadGrid();
+                });
         });
 
         input.addEventListener("change", showFileName);
@@ -376,73 +425,73 @@
             infoArea.textContent = "File name: " + fileName;
         }
 
-        const trainDiv = document.getElementById('trainDiv');
-        const organicBtn = document.getElementById('organic');
-        const recyclableBtn = document.getElementById('recyclable');
+        const trainDiv = document.getElementById("trainDiv");
+        const organicBtn = document.getElementById("organic");
+        const recyclableBtn = document.getElementById("recyclable");
         trainDiv.style.display = "none";
 
-        input.addEventListener('change', () => {
-          if (input.files.length > 0) {
-            trainDiv.style.display
-              = "block";
-          }
-          else {
-            trainDiv.style.display = "none";
-          }
+        input.addEventListener("change", () => {
+            if (input.files.length > 0) {
+                trainDiv.style.display = "block";
+            } else {
+                trainDiv.style.display = "none";
+            }
         });
         // training event listeners.
-        organicBtn.addEventListener('click', () => {
-          train(input, "Organic");
-          readURL(input);
-          reloadGrid();
+        organicBtn.addEventListener("click", () => {
+            train(input, "Organic");
+            readURL(input);
+            reloadGrid();
         });
-        recyclableBtn.addEventListener('click', () => {
-          train(input, "Recyclable");
-          readURL(input);
-          reloadGrid();
+        recyclableBtn.addEventListener("click", () => {
+            train(input, "Recyclable");
+            readURL(input);
+            reloadGrid();
         });
 
-        const grid = document.getElementById('imageExplore');
+        const grid = document.getElementById("imageExplore");
 
         function reloadGrid() {
-          grid.src="https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/main/svg-css/ring-resize.svg";
-          fetch ('explore-predictions?' + new Date().getTime())
-            .then(res => {
-              if (!res.ok) throw new Error('No response');
-              return res.blob();
-            })
-            .then(blob => {
-              const imgURL = URL.createObjectURL(blob);
-              // const tempImg = new Image();
-              grid.src = imgURL;
-              grid.onload = () => {
-                URL.revokeObjectURL(imgURL);
-              }
-            })
-            .catch(err => {
-              console.error(err)
-              });
+            grid.src =
+                "https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/main/svg-css/ring-resize.svg";
+            fetch("explore-predictions?" + new Date().getTime())
+                .then((res) => {
+                    if (!res.ok) throw new Error("No response");
+                    return res.blob();
+                })
+                .then((blob) => {
+                    const imgURL = URL.createObjectURL(blob);
+                    // const tempImg = new Image();
+                    grid.src = imgURL;
+                    grid.onload = () => {
+                        URL.revokeObjectURL(imgURL);
+                    };
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
         }
 
         function train(imageInput, label) {
-          if (imageInput.files.length > 0) {
-            const imageFile = imageInput.files[0];
-            const formData = new FormData();
-            const trainH3 = document.getElementById('currentLoss');
-            formData.append('image', imageFile);
-            formData.append('label', label)
-            fetch('/train', {
-              method: 'PUT',
-              body: formData
-            })
-              .then(resp => {
-                return resp.json();
-              })
-              .then(data => {
-                trainH3.innerText = `Training Loss: ${data.loss.toFixed(4)}`;
-                console.log(data);
-              })
-          }
+            if (imageInput.files.length > 0) {
+                const imageFile = imageInput.files[0];
+                const formData = new FormData();
+                const trainH3 = document.getElementById("training-loss");
+                trainH3.innerText = "Training Loss: ...";
+                formData.append("image", imageFile);
+                formData.append("label", label);
+                fetch("/train", {
+                    method: "PUT",
+                    body: formData,
+                })
+                    .then((resp) => {
+                        return resp.json();
+                    })
+                    .then((data) => {
+                        trainH3.innerText = `Training Loss: ${data.loss.toFixed(4)}`;
+                        console.log(data);
+                    });
+            }
         }
     </script>
 </html>
