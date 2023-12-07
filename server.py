@@ -45,7 +45,8 @@ def train_model():
 # returns bytes of a png image
 @app.route('/explore-predictions', methods=['GET'])
 def get_explore_image():
-    imgbytes = predictor.explore_predictions(width=5)
+    width = request.args.get('width')
+    imgbytes = predictor.explore_predictions(width=5 if width == None else int(width))
     return send_file(imgbytes, mimetype='image/png')
 
 @app.route('/reload-model', methods=['PUT'])
