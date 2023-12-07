@@ -840,12 +840,14 @@ body{margin-top:20px;}
 
 .image-area {
     border: 2px dashed rgba(17, 16, 16, 0.7);
+    width: 100%;
+    height: 100%;
     padding: 1rem;
     position: relative;
 }
 
 .image-area::before {
-    content: 'Uploaded image result';
+    /* content: 'Uploaded image result'; */
     color: #0e0d0d;
     font-weight: bold;
     text-transform: uppercase;

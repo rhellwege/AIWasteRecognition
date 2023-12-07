@@ -23,7 +23,6 @@
   <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
   <link href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
 
-  
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -31,9 +30,6 @@
   
   <!-- Template Main CSS File -->
   <link href="{{ url_for('static', filename='assets/style.css')}}" rel="stylesheet">
-  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-  <!-- <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script> -->
-  
 
 </head>
 
@@ -53,55 +49,40 @@
           <li><a href="Meet_The_Team.html">Meet The Team</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
+      </nav>
 
       <div class="header-social-links d-flex">
-        <a href="#" class="twitter"><i class="bi bi-github"></i></a>
+        <a href="https://github.com/rhellwege/AIWasteRecognition" class="twitter"><i class="bi bi-github"></i></a>
       </div>
 
     </div>
   </header><!-- End Header -->
 
-  <!-- ======= Hero Section ======= -->
-  <!-- <section id="hero"> -->
-  <!--   <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel"> -->
-  <!---->
-  <!--     <div class="carousel-inner" role="listbox"> -->
-  <!---->
-  <!--       <!-- Slide 1 --> -->
-  <!--         <div class="carousel-item active" style="background-image: url({{ url_for('static', filename='assets/slide-1.jpg)')}};"> -->
-  <!--         <div class="carousel-container"> -->
-  <!--           <div class="carousel-content animate__animated animate__fadeInUp"> -->
-  <!--             <h2>Learn About <span>Convolutional Neural Networks</span></h2> -->
-  <!--             <p></p> -->
-  <!--             <div class="text-center"><a href="explore_model" class="btn-get-started">Explore The Model</a></div> -->
-  <!--           </div> -->
-  <!--         </div> -->
-  <!--       </div> -->
-  <!--     </div> -->
-  <!---->
-  <!--   </div> -->
-  <!-- </section><!-- End Hero --> -->
-
-  
-  
-  <div class="container py-5">
-    <!-- For demo purpose -->
-
-
-    <div class="row py-4">
+  <!-- main content -->
+  <div class="mt-5 container py-5">
+    <!-- Controls Row -->
+    <div class="row">
+        <!-- Model Col -->
         <div class="col mx-auto">
-          <h2 class="display-4">Live Inference</h2>
-          <img width=100% src="/explore-predictions" id="imageExplore" alt="">
-        </div>
-        <div class="col-lg-6 mx-auto">
             <header class="text-black text-center">
-                <h1 class="display-4">Upload An Image</h1>
-              <br>
-                <!-- Uploaded image area-->
-                <p class="font-italic text-black text-center">The image uploaded will be rendered inside the box below.</p>
-                <div class="image-area mt-4"><img id="imageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
+                <h2 class="display-4">Model Performance</h2>
+                <br>
             </header>
+            <button id='reloadButton' type="button" class="btn btn-danger btn-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-restart"><path d="M21 6H3"/><path d="M7 12H3"/><path d="M7 18H3"/><path d="M12 18a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L11 14"/><path d="M11 10v4h4"/></svg>
+                Reload Weights
+            </button>
+            <button class="btn btn-primary btn-md" type="button" id="refreshButton" onclick="document.getElementById('imageExplore').src='/explore-predictions?' + new Date().getTime()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-cw"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                New Grid
+            </button>
+        </div> 
+        <!-- Upload Col -->
+        <div class="col mx-auto">
+          <header class="text-black text-center">
+              <h1 class="display-4">Predict Image</h1>
+              <br>
+          </header>
             <!-- Upload image input-->
             <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
                 <input id="upload" type="file" onchange="readURL(this);" class="form-control border-0">
@@ -110,55 +91,37 @@
                     <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">Choose file</small></label>
                 </div>
             </div>
-
-
+        </div>
+    </div>
+    <!-- Display Row -->
+    <div class="row">
+        <div class="col mx-auto">
+          <img class="img-fluid rounded shadow-sm mx-auto d-block" src="/explore-predictions" id="imageExplore" alt="">
+        </div>
+        <div class="col mx-auto">
+              <!-- Uploaded image area-->
+              <div class="image-area"><img id="imageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
         </div>
     </div>
 
-    <!-- <div class="container"> -->
+    <div class="row">
+        <div class="col mx-auto">
+        </div>
+        <div class="col mx-auto">
+            <div id="trainDiv">
+            <button id='organic' type="button" class="btn btn-success btn-md">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-citrus"><path d="M21.66 17.67a1.08 1.08 0 0 1-.04 1.6A12 12 0 0 1 4.73 2.38a1.1 1.1 0 0 1 1.61-.04z"/><path d="M19.65 15.66A8 8 0 0 1 8.35 4.34"/><path d="m14 10-5.5 5.5"/><path d="M14 17.85V10H6.15"/></svg>  
+                  Organic
+            </button>
 
-  <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#myModal"><i class="bi bi-chat"></i>  Train</button>
-
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title"> Live Train The Model</h4>
+            <button id='recyclable' type="button" class="btn btn-success btn-md">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-recycle"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/></svg>
+            Recycle
+            </button>
+          </div>
         </div>
-        <div class="modal-body">
-          <p>Is it accurate or not</p>
-        </div>
-        <div>
-          <button type="button" class="btn btn-default btn-success" style="margin-left: 24px" data-dismiss="modal">Yes</button> 
-          <button type="button" class="btn btn-default btn-danger" style="margin-left: 12px" data-dismiss="modal">No</button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
     </div>
-    
-  </div>
-  
-<!-- </div> -->
-
-
 </div>
-
-
-
-
-
-
-
-
-
   <!-- ======= Footer ======= -->
   <footer id="footer">
 
@@ -177,21 +140,14 @@
         </div>
       </div>
       <div class="social-links text-center text-md-right pt-3 pt-md-0">
-        <a href="#" class="twitter"><i class="bi bi-github"></i></a>
+        <a href="https://github.com/rhellwege/AIWasteRecognition" class="twitter"><i class="bi bi-github"></i></a>
         <a href="Meet_The_Team.html">Team</a>
       </div>
     </div>
   </footer><!-- End Footer -->
-
- 
-
 </body>
 
-
-
 <script>
- 
-
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -219,11 +175,11 @@ function showFileName( event ) {
   infoArea.textContent = 'File name: ' + fileName;
 }
 
-var myModal = document.getElementById('myModal')
-var myInput = document.getElementById('myInput')
-
-myModal.addEventListener('shown.bs.modal', function () {
-  myInput.focus()
-})
+// var myModal = document.getElementById('myModal')
+// var myInput = document.getElementById('myInput')
+//
+// myModal.addEventListener('shown.bs.modal', function () {
+//   myInput.focus()
+// })
 </script>
 </html>

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
       trainDiv.style.display = "none";
     }
   });
-  predictForm.addEventListener('submit', (event) => {
+  peedictForm.addEventListener('submit', (event) => {
     event.preventDefault(); // do not redirect to a seperate page, we want to hit a JSON endpoint.
     // manually populate the form and send the data to the server, expecting json response.
     if (imageInput.files.length > 0) {
