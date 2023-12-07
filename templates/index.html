@@ -11,7 +11,7 @@
 
   <!-- Favicons -->
   
-    <link href="{{ url_for('static', filename='assets/apple-touch-icon.png')}}" rel="apple-touch-icon">
+  <link href="{{ url_for('static', filename='assets/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -27,11 +27,12 @@
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  
+  <script src="{{ url_for('static', filename='script.js')}}"></script>
   
   <!-- Template Main CSS File -->
   <link href="{{ url_for('static', filename='assets/style.css')}}" rel="stylesheet">
-  <script src="bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+  <!-- <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script> -->
   
 
 </head>
@@ -42,7 +43,7 @@
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-      <h1 class="logo me-auto"><a href="index.html"><span>AI</span>WasteClassification</a></h1>
+      <h1 class="logo me-auto"><a href="/"><span>AI</span>WasteClassification</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -50,56 +51,57 @@
         <ul>
           <li><a href="index.html" class="active">Project</a></li>
           <li><a href="Meet_The_Team.html">Meet The Team</a></li>
-
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
       <div class="header-social-links d-flex">
         <a href="#" class="twitter"><i class="bi bi-github"></i></a>
-      
       </div>
 
     </div>
   </header><!-- End Header -->
 
   <!-- ======= Hero Section ======= -->
-  <section id="hero">
-    <img width=600 src="/explore-predictions" id="imageExplore" alt="">
-    <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
-
-      <div class="carousel-inner" role="listbox">
-
-        <!-- Slide 1 -->
-          <div class="carousel-item active" style="background-image: url({{ url_for('static', filename='assets/slide-1.jpg)')}};">
-          <div class="carousel-container">
-            <div class="carousel-content animate__animated animate__fadeInUp">
-              <h2>Learn About <span>Convolutional Neural Networks</span></h2>
-              <p></p>
-              <div class="text-center"><a href="explore_model" class="btn-get-started">Explore The Model</a></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section><!-- End Hero -->
+  <!-- <section id="hero"> -->
+  <!--   <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel"> -->
+  <!---->
+  <!--     <div class="carousel-inner" role="listbox"> -->
+  <!---->
+  <!--       <!-- Slide 1 --> -->
+  <!--         <div class="carousel-item active" style="background-image: url({{ url_for('static', filename='assets/slide-1.jpg)')}};"> -->
+  <!--         <div class="carousel-container"> -->
+  <!--           <div class="carousel-content animate__animated animate__fadeInUp"> -->
+  <!--             <h2>Learn About <span>Convolutional Neural Networks</span></h2> -->
+  <!--             <p></p> -->
+  <!--             <div class="text-center"><a href="explore_model" class="btn-get-started">Explore The Model</a></div> -->
+  <!--           </div> -->
+  <!--         </div> -->
+  <!--       </div> -->
+  <!--     </div> -->
+  <!---->
+  <!--   </div> -->
+  <!-- </section><!-- End Hero --> -->
 
   
+  
   <div class="container py-5">
-
     <!-- For demo purpose -->
-    <header class="text-black text-center">
-        <h1 class="display-4">Upload An Image</h1>
-        <p class="lead mb-0">Upload an image and check for the accuracy</p>
-       <br>
-        <img src="https://media.tenor.com/t5DMW5PI8mgAAAAi/loading-green-loading.gif" alt="" width="150" class="mb-4">
-    </header>
 
 
     <div class="row py-4">
+        <div class="col mx-auto">
+          <h2 class="display-4">Live Inference</h2>
+          <img width=100% src="/explore-predictions" id="imageExplore" alt="">
+        </div>
         <div class="col-lg-6 mx-auto">
-
+            <header class="text-black text-center">
+                <h1 class="display-4">Upload An Image</h1>
+              <br>
+                <!-- Uploaded image area-->
+                <p class="font-italic text-black text-center">The image uploaded will be rendered inside the box below.</p>
+                <div class="image-area mt-4"><img id="imageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
+            </header>
             <!-- Upload image input-->
             <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
                 <input id="upload" type="file" onchange="readURL(this);" class="form-control border-0">
@@ -109,9 +111,6 @@
                 </div>
             </div>
 
-            <!-- Uploaded image area-->
-            <p class="font-italic text-black text-center">The image uploaded will be rendered inside the box below.</p>
-            <div class="image-area mt-4"><img id="imageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
 
         </div>
     </div>
