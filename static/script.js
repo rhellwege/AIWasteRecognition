@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const predictForm = document.getElementById('predictForm');
   const imageInput = document.getElementById('imageInput');
   const trainDiv = document.getElementById('trainDiv');
-  const predictionH2 = document.getElementById('currentPrediction');
 
   trainDiv.style.display = "none";
 
@@ -14,28 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
       trainDiv.style.display = "none";
     }
   });
-  peedictForm.addEventListener('submit', (event) => {
-    event.preventDefault(); // do not redirect to a seperate page, we want to hit a JSON endpoint.
-    // manually populate the form and send the data to the server, expecting json response.
-    if (imageInput.files.length > 0) {
-      const imageFile = imageInput.files[0];
-      const formData = new FormData();
-      formData.append('image', imageFile);
-      fetch('/predict', {
-        method: 'POST',
-        body: formData
-      })
-        .then(resp => {
-          return resp.json();
-        })
-        .then(data => {
-          const percentage = (Math.max(data.probabilities[0], data.probabilities[1]) * 100).toFixed(2);
-          predictionH2.innerText = `I am ${percentage}% sure that this is ${data.prediction}`;
-          console.log(data);
-        })
-    }
-  });
-
   const reloadBtn = document.getElementById('reloadButton');
   reloadBtn.addEventListener('click', () => {
     fetch('/reload-model', {

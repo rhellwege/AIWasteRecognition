@@ -155,7 +155,7 @@
                         <h1 class="display-4">Predict Image</h1>
                         <br />
                     </header>
-                    <h2 id="prediction-results"></h2>
+                    <h2 id="prediction-results">Upload an image to see results.</h2>
                     <!-- Upload image input-->
                     <div
                         class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm"
@@ -163,7 +163,6 @@
                         <input
                             id="upload"
                             type="file"
-                            onchange="readURL(this);"
                             class="form-control border-0"
                         />
                         <label
@@ -314,14 +313,31 @@
     <script>
         function readURL(input) {
             if (input.files && input.files[0]) {
-                var reader = new FileReader();
+                const reader = new FileReader();
                 reader.onload = function (e) {
-                    $("#imageResult").attr("src", e.target.result);
                     // display the uploaded image
+                    $("#imageResult").attr("src", e.target.result);
                 };
                 reader.readAsDataURL(input.files[0]);
+                // upload to /predict endpoint
+                const formData = new FormData();
+                formData.append('image', input.files[0]);
+                fetch('/predict', {
+                  method: 'POST',
+                  body: formData
+                })
+                .then(resp => {
+                  return resp.json();
+                })
+                .then(data => {
+                  const percentage = (Math.max(data.probabilities[0], data.probabilities[1]) * 100).toFixed(2);
+                  $("#prediction-results").html(`I am ${percentage}% sure that this is ${data.prediction}`);
+                  console.log(data);
+                })
             }
         }
+        const input = document.getElementById("upload");
+        const infoArea = document.getElementById("upload-label");
 
         $(function () {
             $("#upload").on("change", function () {
@@ -329,8 +345,6 @@
             });
         });
 
-        var input = document.getElementById("upload");
-        var infoArea = document.getElementById("upload-label");
 
         input.addEventListener("change", showFileName);
         function showFileName(event) {
