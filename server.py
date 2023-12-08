@@ -35,7 +35,7 @@ def train_model():
     if not 'image' in request.files:
         return make_response('no Image uploaded', 404)
     image = request.files['image']
-    lr = request.args.get('lr')
+    lr = float(request.args.get('lr'))
     image = Image.open(image)
     label = request.form.get('label')    
     print(f"[SERVER] :: Training image as {label} with lr: {lr}")
