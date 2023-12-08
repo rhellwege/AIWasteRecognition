@@ -88,7 +88,7 @@ class Predictor():
         result["prediction"] = classes[pred.argmax()]
         return result
     
-    def train(self, image, label: str) -> dict:
+    def train(self, image, label: str, lr: float = 0.001) -> dict:
         """
         image: image to train on
         label is the correct class of the prediction.
@@ -96,13 +96,16 @@ class Predictor():
         same as predict
         loss: a number indicating how badly the model predicted based on the label
         """
+        if lr != None:
+            self.optimizer = torch.optim.SGD(params=self.model.parameters(), lr=lr)
+
         label_tensor = None
         if label == "Organic":
             label_tensor = torch.Tensor([1, 0]).unsqueeze(dim=0).to(self.device)
         elif label == "Recyclable":
             label_tensor = torch.Tensor([0, 1]).unsqueeze(dim=0).to(self.device)
 
-        print(f'[PREDICTOR] :: Live training image as {label}')
+        print(f'[PREDICTOR] :: Live training image as {label} with learning_rate {lr}')
         image = image.convert("RGB")
         img_tensor = self.transformer(image).unsqueeze(dim=0).to(self.device)
         result = {}

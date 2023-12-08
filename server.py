@@ -35,9 +35,11 @@ def train_model():
     if not 'image' in request.files:
         return make_response('no Image uploaded', 404)
     image = request.files['image']
+    lr = request.args.get('lr')
     image = Image.open(image)
     label = request.form.get('label')    
-    result = predictor.train(image, label)
+    print(f"[SERVER] :: Training image as {label} with lr: {lr}")
+    result = predictor.train(image, label, lr)
     result = json.dumps(result)
     print("[SERVER] :: ", result)
     return result, 200, {'Content-Type': 'application/json'} # set content type to json
