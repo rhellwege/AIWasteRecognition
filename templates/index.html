@@ -402,8 +402,12 @@
                         } else {
                             predSpan = "<span style='color: green'>Organic</span>";
                         }
-                        $("#prediction-results").html(
-                            `I'm <span style='color: gold'>${percentage}%</span> sure this is ${predSpan}`,
+                        // red-yellow-green
+                        const p = 2*((percentage-50)/100);
+                        const green = p*255;
+                        const red = (1-p)*255;
+                
+                        $("#prediction-results").html(`I'm <span style='color: rgb(${red}, ${green}, 0)'>${percentage}%</span> sure this is ${predSpan}`,
                         );
                         console.log(data);
                     });
