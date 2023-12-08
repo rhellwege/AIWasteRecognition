@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-        <title>AIWasteDetection</title>
+        <title>AIWasteRecognition</title>
         <meta content="" name="description" />
         <meta content="" name="keywords" />
 
@@ -12,7 +12,8 @@
 
         <link
             href="{{ url_for('static', filename='assets/apple-touch-icon.png')}}"
-            rel="apple-touch-icon"
+            type="image/x-icon" 
+            rel="icon"
         />
 
         <!-- Google Fonts -->
@@ -444,14 +445,18 @@
         });
         // training event listeners.
         organicBtn.addEventListener("click", () => {
-            train(input, "Organic");
-            readURL(input);
-            reloadGrid();
+            train(input, "Organic")
+              .then(() => {
+                readURL(input);
+                reloadGrid();
+            });
         });
         recyclableBtn.addEventListener("click", () => {
-            train(input, "Recyclable");
-            readURL(input);
-            reloadGrid();
+            train(input, "Recyclable")
+              .then(() => {
+                readURL(input);
+                reloadGrid();
+            });
         });
 
         const grid = document.getElementById("imageExplore");
@@ -485,7 +490,7 @@
                 trainH3.innerText = "Training Loss: ...";
                 formData.append("image", imageFile);
                 formData.append("label", label);
-                fetch("/train", {
+                return fetch("/train", {
                     method: "PUT",
                     body: formData,
                 })
@@ -495,6 +500,7 @@
                     .then((data) => {
                         trainH3.innerText = `Training Loss: ${data.loss.toFixed(4)}`;
                         console.log(data);
+                        return data;
                     });
             }
         }
