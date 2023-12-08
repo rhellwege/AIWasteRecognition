@@ -244,7 +244,7 @@
             <!-- Training row -->
             <div class="mt-1 row gx-5">
                 <div class="col mx-auto">
-                    <h2 id="training-loss" class=""></h2>
+                    <h2 id="training-loss" class="py-2"></h2>
                 </div>
                 <div class="col mx-auto">
                     <div id="trainDiv">
@@ -376,7 +376,7 @@
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 $("#prediction-results").html(`...`);
-                reader.onload = function (e) {
+                reader.onload = (e) => {
                     // display the uploaded image
                     $("#imageResult").attr("src", e.target.result);
                 };
@@ -412,12 +412,12 @@
         const input = document.getElementById("upload");
         const infoArea = document.getElementById("upload-label");
 
-        $(function () {
+        $(() => {
             reloadGrid();
-            $("#upload").on("change", function () {
+            $("#upload").on("change", () => {
                 readURL(input);
             });
-            $('#lr-slider').on('change', () => {
+            $('#lr-slider').on('input', () => {
                 $('#lr-display').html($('#lr-slider').val());
             })
         });
@@ -468,8 +468,6 @@
                 reloadGrid();
             });
         });
-
-
         const grid = document.getElementById("imageExplore");
 
         function reloadGrid() {
