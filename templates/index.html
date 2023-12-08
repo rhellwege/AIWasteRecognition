@@ -170,7 +170,7 @@
                                 New Grid
                             </button>
                         </div>
-                        <button class="btn btn-primary btn-sm" type="button">
+                        <button id="info-button" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#myModal">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
                         </button>
                     </div>
@@ -343,6 +343,37 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal-dialog">
+          
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">How do I use this?</h4>
+              </div>
+              <div class="modal-body">
+                <ol>
+                  <li class="py-1">Upload an image by clicking the button on the top right, you should see a preview of your image below</li>
+                  <li class="py-1">Look at the title on the right, our AI model predicted what type of image it is in the background automatically!</li>
+                  <li class="py-1">If the AI was wrong, you can train the model live by clicking the buttons on the bottom. </li>
+                  <li class="py-1">Once you train the AI, the weights will have changed, and the performance may have changed, you can see this on the left side of the page.</li>
+                  <li class="py-1">To learn more about the model in the background, you can go to <a href="/model">this page.</a></li>
+                  
+                </ol>
+                
+
+              </div>
+              <div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
         <!-- ======= Footer ======= -->
         <footer id="footer">
             <div class="container d-md-flex py-4">
@@ -372,6 +403,12 @@
     </body>
 
     <script>
+        var myModal = document.getElementById('myModal')
+        var myInput = document.getElementById('myInput')
+
+        myModal.addEventListener('shown.bs.modal', function () {
+          myInput.focus()
+        })
         function readURL(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -424,20 +461,18 @@
             $('#lr-slider').on('input', () => {
                 $('#lr-display').html($('#lr-slider').val());
             })
+            $('#reloadButton').on("click", () => {
+                fetch("/reload-model", {
+                    method: "PUT",
+                })
+                    .then((resp) => resp.text())
+                    .then((data) => {
+                        console.log(data);
+                        readURL(input);
+                        reloadGrid();
+                    });
+            });
         });
-        const reloadBtn = document.getElementById("reloadButton");
-        reloadBtn.addEventListener("click", () => {
-            fetch("/reload-model", {
-                method: "PUT",
-            })
-                .then((resp) => resp.text())
-                .then((data) => {
-                    console.log(data);
-                    readURL(input);
-                    reloadGrid();
-                });
-        });
-
         input.addEventListener("change", showFileName);
         function showFileName(event) {
             var input = event.srcElement;
