@@ -12,7 +12,7 @@
 
         <link
             href="{{ url_for('static', filename='assets/favicon.ico')}}"
-            type="image/x-icon" 
+            type="image/x-icon"
             rel="icon"
         />
 
@@ -51,10 +51,7 @@
         />
 
         <!-- Template Main CSS File -->
-        <link
-            href="{{ url_for('static', filename='assets/style.css')}}"
-            rel="stylesheet"
-        />
+        <link href="{{ url_for('static', filename='assets/style.css')}}" rel="stylesheet" />
     </head>
 
     <body>
@@ -76,9 +73,7 @@
                 </nav>
 
                 <div class="header-social-links d-flex">
-                    <a
-                        href="https://github.com/rhellwege/AIWasteRecognition"
-                        class="twitter"
+                    <a href="https://github.com/rhellwege/AIWasteRecognition" class="twitter"
                         ><i class="bi bi-github"></i
                     ></a>
                 </div>
@@ -114,11 +109,7 @@
                     </h2>
                     <div class="py-3 d-flex justify-content-between">
                         <div class="d-flex">
-                            <button
-                                id="reloadButton"
-                                type="button"
-                                class="btn btn-danger btn-md"
-                            >
+                            <button id="reloadButton" type="button" class="btn btn-danger btn-md">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="24"
@@ -159,16 +150,35 @@
                                     stroke-linejoin="round"
                                     class="lucide lucide-rotate-cw"
                                 >
-                                    <path
-                                        d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"
-                                    />
+                                    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
                                     <path d="M21 3v5h-5" />
                                 </svg>
                                 New Grid
                             </button>
                         </div>
-                        <button id="info-button" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#infoModal">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        <button
+                            id="info-button"
+                            class="btn btn-primary btn-sm"
+                            type="button"
+                            data-toggle="modal"
+                            data-target="#infoModal"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-info"
+                            >
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 16v-4" />
+                                <path d="M12 8h.01" />
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -178,32 +188,38 @@
                         <!-- <h2 class="display-4">Predict Image</h2> -->
                     </header>
                     <h2>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
-                      <span id="prediction-results">  Upload an image to see results.</span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="32"
+                            height="32"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="lucide lucide-sparkles"
+                        >
+                            <path
+                                d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                            />
+                            <path d="M5 3v4" />
+                            <path d="M19 17v4" />
+                            <path d="M3 5h4" />
+                            <path d="M17 19h4" />
+                        </svg>
+                        <span id="prediction-results"> Upload an image to see results.</span>
                     </h2>
                     <!-- Upload image input-->
-                    <div
-                        class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm"
-                    >
-                        <input
-                            id="upload"
-                            type="file"
-                            class="form-control border-0"
-                        />
-                        <label
-                            id="upload-label"
-                            for="upload"
-                            class="font-weight-light text-muted"
+                    <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+                        <input id="upload" type="file" class="form-control border-0" />
+                        <label id="upload-label" for="upload" class="font-weight-light text-muted"
                             >Choose file</label
                         >
                         <div class="input-group-append">
-                            <label
-                                for="upload"
-                                class="btn btn-light m-0 rounded-pill px-4"
-                            >
+                            <label for="upload" class="btn btn-light m-0 rounded-pill px-4">
                                 <i class="fa fa-cloud-upload mr-2 text-muted"></i
-                                ><small
-                                    class="text-uppercase font-weight-bold text-muted"
+                                ><small class="text-uppercase font-weight-bold text-muted"
                                     >Choose file</small
                                 ></label
                             >
@@ -242,8 +258,33 @@
             <div class="mt-1 row gx-5">
                 <div class="col mx-auto">
                     <div class="p-3 d-flex justify-content-between">
-                      <h2 id="training-loss" class="my-auto"></h2>
-                      <button id="see-inside-btn" type="button" class="py-2 btn btn-success btn-sm" data-toggle="modal" data-target="#insideModal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zoom-in"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/><line x1="11" x2="11" y1="8" y2="14"/><line x1="8" x2="14" y1="11" y2="11"/></svg> See Inside</button>
+                        <h2 id="training-loss" class="my-auto"></h2>
+                        <button
+                            id="see-inside-btn"
+                            type="button"
+                            class="py-2 btn btn-success btn-sm"
+                            data-toggle="modal"
+                            data-target="#insideModal"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-zoom-in"
+                            >
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" x2="16.65" y1="21" y2="16.65" />
+                                <line x1="11" x2="11" y1="8" y2="14" />
+                                <line x1="8" x2="14" y1="11" y2="11" />
+                            </svg>
+                            See Inside
+                        </button>
                     </div>
                 </div>
                 <div class="col mx-auto">
@@ -270,11 +311,7 @@
                                 Train as
                             </h2>
                             <div class="mx-2 d-flex py-2">
-                                <button
-                                    id="organic"
-                                    type="button"
-                                    class="btn btn-success btn-md"
-                                >
+                                <button id="organic" type="button" class="btn btn-success btn-md">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="24"
@@ -321,76 +358,97 @@
                                             d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"
                                         />
                                         <path d="m14 16-3 3 3 3" />
-                                        <path
-                                            d="M8.293 13.596 7.196 9.5 3.1 10.598"
-                                        />
+                                        <path d="M8.293 13.596 7.196 9.5 3.1 10.598" />
                                         <path
                                             d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"
                                         />
-                                        <path
-                                            d="m13.378 9.633 4.096 1.098 1.097-4.096"
-                                        />
+                                        <path d="m13.378 9.633 4.096 1.098 1.097-4.096" />
                                     </svg>
                                     Recycle
                                 </button>
                             </div>
                         </div>
                         <div class="d-flex">
-                          <p>Learning Rate: <span id="lr-display">0.001</span></p>
-                          <input class="form-range py-2" id="lr-slider" type="range" value="0.001" min="0.0" max="0.01" step="0.00001">
+                            <p>Learning Rate: <span id="lr-display">0.001</span></p>
+                            <input
+                                class="form-range py-2"
+                                id="lr-slider"
+                                type="range"
+                                value="0.001"
+                                min="0.0"
+                                max="0.01"
+                                step="0.00001"
+                            />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal fade" id="infoModal" role="dialog">
-          <div class="modal-dialog">
-          
-            <!-- Modal content-->
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">How do I use this?</h4>
-              </div>
-              <div class="modal-body">
-                <ol>
-                  <li class="py-1">Upload an image by clicking the button on the top right, you should see a preview of your image below</li>
-                  <li class="py-1">Look at the title on the right, our AI model predicted what type of image it is in the background automatically!</li>
-                  <li class="py-1">If the AI was wrong, you can train the model live by clicking the buttons on the bottom. </li>
-                  <li class="py-1">Once you train the AI, the weights will have changed, and the performance may have changed, you can see this on the left side of the page.</li>
-                  <li class="py-1">To learn more about the model in the background, you can go to <a href="/model">this page.</a></li>
-                </ol>
-              </div>
-              <div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">How do I use this?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ol>
+                            <li class="py-1">
+                                Upload an image by clicking the button on the top right, you should
+                                see a preview of your image below
+                            </li>
+                            <li class="py-1">
+                                Look at the title on the right, our AI model predicted what type of
+                                image it is in the background automatically!
+                            </li>
+                            <li class="py-1">
+                                If the AI was wrong, you can train the model live by clicking the
+                                buttons on the bottom.
+                            </li>
+                            <li class="py-1">
+                                Once you train the AI, the weights will have changed, and the
+                                performance may have changed, you can see this on the left side of
+                                the page.
+                            </li>
+                            <li class="py-1">
+                                To learn more about the model in the background, you can go to
+                                <a href="/model">this page.</a>
+                            </li>
+                        </ol>
+                    </div>
+                    <div></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
             </div>
-            
-          </div>
-          
         </div>
         <div class="modal fade" id="insideModal" role="dialog">
-          <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Inside The Model</h4>
-              </div>
-              <div class="modal-body">
-              </div>
-                  <img class="img-fluid rounded shadow-sm mx-auto d-block" src="#" id="kernels-image" alt="" /> 
-              <div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Inside The Model</h4>
+                    </div>
+                    <div class="modal-body"></div>
+                    <img
+                        class="img-fluid rounded shadow-sm mx-auto d-block"
+                        src="{{ url_for('static', filename='assets/kernels.png')}}"
+                        id="kernels-image"
+                        alt=""
+                    />
+                    <div></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
             </div>
-            
-          </div>
-          
         </div>
         <!-- ======= Footer ======= -->
         <footer id="footer">
@@ -408,9 +466,7 @@
                     </div>
                 </div>
                 <div class="social-links text-center text-md-right pt-3 pt-md-0">
-                    <a
-                        href="https://github.com/rhellwege/AIWasteRecognition"
-                        class="twitter"
+                    <a href="https://github.com/rhellwege/AIWasteRecognition" class="twitter"
                         ><i class="bi bi-github"></i
                     ></a>
                     <a href="Meet_The_Team.html">Team</a>
@@ -421,175 +477,156 @@
     </body>
 
     <script>
-        var infoModal = document.getElementById('infoModal')
-        var insideModal = document.getElementById('insideModal')
-        var myInput = document.getElementById('myInput')
+        var infoModal = document.getElementById("infoModal")
+        var insideModal = document.getElementById("insideModal")
+        var myInput = document.getElementById("myInput")
 
-        infoModal.addEventListener('shown.bs.modal', function () {
-          myInput.focus()
+        infoModal.addEventListener("shown.bs.modal", function () {
+            myInput.focus()
         })
-        insideModal.addEventListener('shown.bs.modal', function () {
-          myInput.focus()
+        insideModal.addEventListener("shown.bs.modal", function () {
+            myInput.focus()
         })
         function readURL(input) {
             if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                $("#prediction-results").html(`...`);
-                reader.onload = (e) => {
+                const reader = new FileReader()
+                $("#prediction-results").html(`...`)
+                reader.onload = e => {
                     // display the uploaded image
-                    $("#imageResult").attr("src", e.target.result);
-                };
-                reader.readAsDataURL(input.files[0]);
+                    $("#imageResult").attr("src", e.target.result)
+                }
+                reader.readAsDataURL(input.files[0])
                 // upload to /predict endpoint
-                const formData = new FormData();
-                formData.append("image", input.files[0]);
+                const formData = new FormData()
+                formData.append("image", input.files[0])
                 fetch("/predict", {
                     method: "POST",
-                    body: formData,
+                    body: formData
                 })
-                    .then((resp) => {
-                        return resp.json();
+                    .then(resp => {
+                        return resp.json()
                     })
-                    .then((data) => {
+                    .then(data => {
                         const percentage = (
-                            Math.max(data.probabilities[0], data.probabilities[1]) *
-                            100
-                        ).toFixed(2);
-                        let predSpan = "";
+                            Math.max(data.probabilities[0], data.probabilities[1]) * 100
+                        ).toFixed(2)
+                        let predSpan = ""
                         if (data.prediction === "Recycle") {
-                            predSpan = "<span style='color: blue'>Recycle</span>";
+                            predSpan = "<span style='color: blue'>Recycle</span>"
                         } else {
-                            predSpan = "<span style='color: green'>Organic</span>";
+                            predSpan = "<span style='color: green'>Organic</span>"
                         }
                         // red-yellow-green
-                        const p = 2*((percentage-50)/100);
-                        const green = p*255;
-                        const red = (1-p)*255;
-                
-                        $("#prediction-results").html(`I'm <span style='color: rgb(${red}, ${green}, 0)'>${percentage}%</span> sure this is ${predSpan}`,
-                        );
-                        console.log(data);
-                    });
+                        const p = 2 * ((percentage - 50) / 100)
+                        const green = p * 255
+                        const red = (1 - p) * 255
+
+                        $("#prediction-results").html(
+                            `I'm <span style='color: rgb(${red}, ${green}, 0)'>${percentage}%</span> sure this is ${predSpan}`
+                        )
+                        console.log(data)
+                    })
             }
         }
-        const input = document.getElementById("upload");
-        const infoArea = document.getElementById("upload-label");
+        const input = document.getElementById("upload")
+        const infoArea = document.getElementById("upload-label")
 
         $(() => {
-            reloadGrid();
+            reloadGrid()
             $("#upload").on("change", () => {
-                readURL(input);
-            });
-            $('#lr-slider').on('input', () => {
-                $('#lr-display').html($('#lr-slider').val());
+                readURL(input)
             })
-            $('#reloadButton').on("click", () => {
+            $("#lr-slider").on("input", () => {
+                $("#lr-display").html($("#lr-slider").val())
+            })
+            $("#reloadButton").on("click", () => {
                 fetch("/reload-model", {
-                    method: "PUT",
+                    method: "PUT"
                 })
-                    .then((resp) => resp.text())
-                    .then((data) => {
-                        console.log(data);
-                        readURL(input);
-                        reloadGrid();
-                    });
-            });
-        });
-        input.addEventListener("change", showFileName);
+                    .then(resp => resp.text())
+                    .then(data => {
+                        console.log(data)
+                        readURL(input)
+                        reloadGrid()
+                    })
+            })
+        })
+        input.addEventListener("change", showFileName)
         function showFileName(event) {
-            var input = event.srcElement;
-            var fileName = input.files[0].name;
-            infoArea.textContent = "File name: " + fileName;
+            var input = event.srcElement
+            var fileName = input.files[0].name
+            infoArea.textContent = "File name: " + fileName
         }
 
-        const trainDiv = document.getElementById("trainDiv");
-        const organicBtn = document.getElementById("organic");
-        const recyclableBtn = document.getElementById("recyclable");
-        trainDiv.style.display = "none";
+        const trainDiv = document.getElementById("trainDiv")
+        const organicBtn = document.getElementById("organic")
+        const recyclableBtn = document.getElementById("recyclable")
+        trainDiv.style.display = "none"
 
         input.addEventListener("change", () => {
             if (input.files.length > 0) {
-                trainDiv.style.display = "block";
+                trainDiv.style.display = "block"
             } else {
-                trainDiv.style.display = "none";
+                trainDiv.style.display = "none"
             }
-        });
+        })
         // training event listeners.
         organicBtn.addEventListener("click", () => {
-            train(input, "Organic")
-              .then(() => {
-                readURL(input);
-                reloadGrid();
-            });
-        });
+            train(input, "Organic").then(() => {
+                readURL(input)
+                reloadGrid()
+            })
+        })
         recyclableBtn.addEventListener("click", () => {
-            train(input, "Recyclable")
-              .then(() => {
-                readURL(input);
-                reloadGrid();
-            });
-        });
-        const grid = document.getElementById("imageExplore");
-        const kernels = document.getElementById("kernels-image");
+            train(input, "Recyclable").then(() => {
+                readURL(input)
+                reloadGrid()
+            })
+        })
+        const grid = document.getElementById("imageExplore")
 
         // this function should be called on_model_change
         function reloadGrid() {
             grid.src =
-                "https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/main/svg-css/ring-resize.svg";
-            kernels.src =
-                "https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/main/svg-css/ring-resize.svg";
-            fetch("explore-predictions?" + new Date().getTime())
-                .then((res) => {
-                    if (!res.ok) throw new Error("No response from explore predictions");
-                    return res.blob();
+                "https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/main/svg-css/ring-resize.svg"
+           fetch("explore-predictions?" + new Date().getTime())
+                .then(res => {
+                    if (!res.ok) throw new Error("No response from explore predictions")
+                    return res.blob()
                 })
-                .then((blob) => {
-                    const imgURL = URL.createObjectURL(blob);
-                    grid.src = imgURL;
+                .then(blob => {
+                    const imgURL = URL.createObjectURL(blob)
+                    grid.src = imgURL
                     grid.onload = () => {
-                        URL.revokeObjectURL(imgURL);
-                    };
-                    return fetch("extract-last-layer?" + new Date().getTime());
+                        URL.revokeObjectURL(imgURL)
+                    }
                 })
-                .then((res) => {
-                    if (!res.ok) throw new Error("No response from last layer");
-                    return res.blob();
+                .catch(err => {
+                    console.error(err)
                 })
-                .then((blob) => {
-                    const imgURL = URL.createObjectURL(blob);
-                    console.log(imgURL)
-                    kernels.src = imgURL;
-                    kernels.onload = () => {
-                        URL.revokeObjectURL(imgURL);
-                    };
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
-            
         }
 
         function train(imageInput, label) {
             if (imageInput.files.length > 0) {
-                const imageFile = imageInput.files[0];
-                const formData = new FormData();
-                const trainH3 = document.getElementById("training-loss");
-                trainH3.innerText = "Training Loss: ...";
-                formData.append("image", imageFile);
-                formData.append("label", label);
-                const lr = $('#lr-slider').val();
+                const imageFile = imageInput.files[0]
+                const formData = new FormData()
+                const trainH3 = document.getElementById("training-loss")
+                trainH3.innerText = "Training Loss: ..."
+                formData.append("image", imageFile)
+                formData.append("label", label)
+                const lr = $("#lr-slider").val()
                 return fetch(`/train?lr=${lr}`, {
                     method: "PUT",
-                    body: formData,
+                    body: formData
                 })
-                    .then((resp) => {
-                        return resp.json();
+                    .then(resp => {
+                        return resp.json()
                     })
-                    .then((data) => {
-                        trainH3.innerText = `Training Loss: ${data.loss.toFixed(4)}`;
-                        console.log(data);
-                        return data;
-                    });
+                    .then(data => {
+                        trainH3.innerText = `Training Loss: ${data.loss.toFixed(4)}`
+                        console.log(data)
+                        return data
+                    })
             }
         }
     </script>

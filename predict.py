@@ -166,39 +166,41 @@ class Predictor():
         return buffer
 
     def extract_last_layer(self):
-        start = time.time()
-        first_conv_layer = None
-        for name, layer in self.model.named_modules():
-            if name == "conv_block_3.0":
-                first_conv_layer = layer
-                break
+        self.model.eval()
+        with torch.inference_mode():
+            start = time.time()
+            first_conv_layer = None
+            for name, layer in self.model.named_modules():
+                if name == "conv_block_3.0":
+                    first_conv_layer = layer
+                    break
 
-        if first_conv_layer is not None:
-            filters = first_conv_layer.weight.data.cpu().numpy()
-            num_filters = filters.shape[0]
-            num_cols = 12
-            num_rows = num_filters // num_cols + 1
-            fig, axes = plt.subplots(num_rows, num_cols, figsize=(4,4))
-            for i, ax in enumerate(axes.flatten()):
-                if i < num_filters:
-                    filter_img = filters[i]
-                    for j in range(3):
-                        ax.imshow(filter_img[j], cmap='viridis')
-                    ax.axis('off')
-                else:
-                    ax.axis('off')
-            plt.suptitle(f"Last Conv Layer")
-            plt.tight_layout()
-            buffer = io.BytesIO()
-            plt.savefig(buffer, format='png')
-            buffer.seek(0)
-            plt.clf() # make sure we don't interfere with main thread
-            plt.close('all')
-            end = time.time()
-            print(f"[PREDICTOR] :: Extracting last layer kernels took {end-start} seconds")
-            return buffer
-        print(f"[PREDICTOR] :: ERROR: Could not find the last conv layer")
-        return None
+            if first_conv_layer is not None:
+                filters = first_conv_layer.weight.data.cpu().numpy()
+                num_filters = filters.shape[0]
+                num_cols = 12
+                num_rows = num_filters // num_cols + 1
+                fig, axes = plt.subplots(num_rows, num_cols, figsize=(4,4))
+                for i, ax in enumerate(axes.flatten()):
+                    if i < num_filters:
+                        filter_img = filters[i]
+                        for j in range(3):
+                            ax.imshow(filter_img[j], cmap='viridis')
+                        ax.axis('off')
+                    else:
+                        ax.axis('off')
+                plt.suptitle(f"Last Conv Layer")
+                plt.tight_layout()
+                buffer = io.BytesIO()
+                plt.savefig(buffer, format='png')
+                buffer.seek(0)
+                plt.clf() # make sure we don't interfere with main thread
+                plt.close('all')
+                end = time.time()
+                print(f"[PREDICTOR] :: Extracting last layer kernels took {end-start} seconds")
+                return buffer
+            print(f"[PREDICTOR] :: ERROR: Could not find the last conv layer")
+            return None
 
 
 def explore_dataset(dataset_dir, width=3):
