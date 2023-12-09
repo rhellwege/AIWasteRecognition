@@ -35,9 +35,11 @@ def train_model():
     if not 'image' in request.files:
         return make_response('no Image uploaded', 404)
     image = request.files['image']
+    lr = float(request.args.get('lr'))
     image = Image.open(image)
     label = request.form.get('label')    
-    result = predictor.train(image, label)
+    print(f"[SERVER] :: Training image as {label} with lr: {lr}")
+    result = predictor.train(image, label, lr)
     result = json.dumps(result)
     print("[SERVER] :: ", result)
     return result, 200, {'Content-Type': 'application/json'} # set content type to json
@@ -45,7 +47,8 @@ def train_model():
 # returns bytes of a png image
 @app.route('/explore-predictions', methods=['GET'])
 def get_explore_image():
-    imgbytes = predictor.explore_predictions(width=5)
+    width = request.args.get('width')
+    imgbytes = predictor.explore_predictions(width=5 if width == None else int(width))
     return send_file(imgbytes, mimetype='image/png')
 
 @app.route('/reload-model', methods=['PUT'])
@@ -54,6 +57,11 @@ def reload_model_endpoint():
     predictor = Predictor(default_model, device = 'cpu')
     print("[SERVER] :: ", 'reseting predictor weights')
     return 'Reloaded model.'
+
+@app.route('/extract-last-layer', methods=['GET'])
+def handle_extract():
+    imgbytes = predictor.extract_last_layer()
+    return send_file(imgbytes, mimetype='image/png')
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")

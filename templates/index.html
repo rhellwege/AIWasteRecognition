@@ -1,39 +1,596 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-<head>
-  <title>AI Waste Recognition</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script type="text/javascript" src="{{ url_for('static', filename = 'script.js') }}">
-  </script>
-  <link rel="stylesheet" type="css" href="{{ url_for('static', filename = 'style.css') }}">
-</head>
+        <title>AIWasteRecognition</title>
+        <meta content="" name="description" />
+        <meta content="" name="keywords" />
 
-<body>
-    <form id="predictForm" action="/predict" method="post" enctype="multipart/form-data">
-        <input id="imageInput" type="file" name="image" accept="image/*">
-        <input type="submit" value="Predict">
-    </form>
+        <!-- Favicons -->
 
-    <h2 id="currentPrediction">
-    </h2>
+        <link
+            href="{{ url_for('static', filename='assets/favicon.ico')}}"
+            type="image/x-icon" 
+            rel="icon"
+        />
 
-    <div id="trainDiv">
-      <h3>Train Me</h3>
-      <button type="button" id="organic">Organic</button>
-      <button type="button" id="recyclable">Recyclable</button>
-    </div>
+        <!-- Google Fonts -->
+        <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+            rel="stylesheet"
+        />
 
-    <h3 id="currentLoss"></h3>
+        <!-- Vendor CSS Files -->
+        <link
+            href="{{ url_for('static', filename='assets/vendor/animate.css/animate.min.css')}}"
+            rel="stylesheet"
+        />
 
-    <div>
-      <button type="button" id="refreshButton" onclick="document.getElementById('imageExplore').src='/explore-predictions?' + new Date().getTime()">Refresh</button>
-      <img width=600 src="/explore-predictions" id="imageExplore" alt="">
-    </div>
+        <link
+            href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css')}}"
+            rel="stylesheet"
+        />
+        <link
+            href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css')}}"
+            rel="stylesheet"
+        />
+        <link
+            href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css')}}"
+            rel="stylesheet"
+        />
 
-    <button type="button" id="reloadButton">Reload Model</button>
-</body>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
 
+        <!-- Template Main CSS File -->
+        <link
+            href="{{ url_for('static', filename='assets/style.css')}}"
+            rel="stylesheet"
+        />
+    </head>
 
+    <body>
+        <!-- ======= Header ======= -->
+        <header id="header" class="fixed-top">
+            <div class="container d-flex align-items-center">
+                <h1 class="logo me-auto">
+                    <a href="/"><span>AI</span>WasteClassification</a>
+                </h1>
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+                <nav id="navbar" class="navbar order-last order-lg-0">
+                    <ul>
+                        <li><a href="index.html" class="active">Project</a></li>
+                        <li><a href="Meet_The_Team.html">Meet The Team</a></li>
+                    </ul>
+                    <i class="bi bi-list mobile-nav-toggle"></i>
+                </nav>
+
+                <div class="header-social-links d-flex">
+                    <a
+                        href="https://github.com/rhellwege/AIWasteRecognition"
+                        class="twitter"
+                        ><i class="bi bi-github"></i
+                    ></a>
+                </div>
+            </div>
+        </header>
+        <!-- End Header -->
+
+        <!-- main content -->
+        <div class="main-container pt-5 container py-5 mx-auto">
+            <!-- Controls Row -->
+            <div class="p-3 row gx-5">
+                <!-- Model Col -->
+                <div class="col mx-auto">
+                    <h2 id="">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="32"
+                            height="32"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="lucide lucide-settings"
+                        >
+                            <path
+                                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                            />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        Model Controls
+                    </h2>
+                    <div class="py-3 d-flex justify-content-between">
+                        <div class="d-flex">
+                            <button
+                                id="reloadButton"
+                                type="button"
+                                class="btn btn-danger btn-md"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-list-restart"
+                                >
+                                    <path d="M21 6H3" />
+                                    <path d="M7 12H3" />
+                                    <path d="M7 18H3" />
+                                    <path
+                                        d="M12 18a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L11 14"
+                                    />
+                                    <path d="M11 10v4h4" />
+                                </svg>
+                                Reload Weights
+                            </button>
+                            <button
+                                class="mx-2 btn btn-warning btn-md"
+                                type="button"
+                                id="refreshButton"
+                                onclick="reloadGrid()"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-rotate-cw"
+                                >
+                                    <path
+                                        d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"
+                                    />
+                                    <path d="M21 3v5h-5" />
+                                </svg>
+                                New Grid
+                            </button>
+                        </div>
+                        <button id="info-button" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#infoModal">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <!-- Upload Col -->
+                <div class="col mx-auto">
+                    <header class="text-black text-center">
+                        <!-- <h2 class="display-4">Predict Image</h2> -->
+                    </header>
+                    <h2>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+                      <span id="prediction-results">  Upload an image to see results.</span>
+                    </h2>
+                    <!-- Upload image input-->
+                    <div
+                        class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm"
+                    >
+                        <input
+                            id="upload"
+                            type="file"
+                            class="form-control border-0"
+                        />
+                        <label
+                            id="upload-label"
+                            for="upload"
+                            class="font-weight-light text-muted"
+                            >Choose file</label
+                        >
+                        <div class="input-group-append">
+                            <label
+                                for="upload"
+                                class="btn btn-light m-0 rounded-pill px-4"
+                            >
+                                <i class="fa fa-cloud-upload mr-2 text-muted"></i
+                                ><small
+                                    class="text-uppercase font-weight-bold text-muted"
+                                    >Choose file</small
+                                ></label
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Display Row -->
+            <div class="display-row row gx-5">
+                <div class="col mx-auto">
+                    <img
+                        class="img-fluid rounded shadow-sm mx-auto d-block"
+                        src="#"
+                        width="100%"
+                        height="100%"
+                        id="imageExplore"
+                        alt=""
+                    />
+                </div>
+                <div class="col mx-auto">
+                    <!-- Uploaded image area-->
+                    <div class="image-area">
+                        <img
+                            class="img-fluid rounded shadow-sm mx-auto d-block"
+                            id="imageResult"
+                            src="#"
+                            width="100%"
+                            height="100%"
+                            alt=""
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training row -->
+            <div class="mt-1 row gx-5">
+                <div class="col mx-auto">
+                    <div class="p-3 d-flex justify-content-between">
+                      <h2 id="training-loss" class="my-auto"></h2>
+                      <button id="see-inside-btn" type="button" class="py-2 btn btn-success btn-sm" data-toggle="modal" data-target="#insideModal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zoom-in"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/><line x1="11" x2="11" y1="8" y2="14"/><line x1="8" x2="14" y1="11" y2="11"/></svg> See Inside</button>
+                    </div>
+                </div>
+                <div class="col mx-auto">
+                    <div id="trainDiv">
+                        <div class="d-flex">
+                            <h2 class="my-auto">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="32"
+                                    height="32"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-book-marked"
+                                >
+                                    <path
+                                        d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+                                    />
+                                    <polyline points="10 2 10 10 13 7 16 10 16 2" />
+                                </svg>
+                                Train as
+                            </h2>
+                            <div class="mx-2 d-flex py-2">
+                                <button
+                                    id="organic"
+                                    type="button"
+                                    class="btn btn-success btn-md"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="lucide lucide-citrus"
+                                    >
+                                        <path
+                                            d="M21.66 17.67a1.08 1.08 0 0 1-.04 1.6A12 12 0 0 1 4.73 2.38a1.1 1.1 0 0 1 1.61-.04z"
+                                        />
+                                        <path d="M19.65 15.66A8 8 0 0 1 8.35 4.34" />
+                                        <path d="m14 10-5.5 5.5" />
+                                        <path d="M14 17.85V10H6.15" />
+                                    </svg>
+                                    Organic
+                                </button>
+
+                                <button
+                                    id="recyclable"
+                                    type="button"
+                                    class="mx-2 btn btn-primary btn-md"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="lucide lucide-recycle"
+                                    >
+                                        <path
+                                            d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"
+                                        />
+                                        <path
+                                            d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"
+                                        />
+                                        <path d="m14 16-3 3 3 3" />
+                                        <path
+                                            d="M8.293 13.596 7.196 9.5 3.1 10.598"
+                                        />
+                                        <path
+                                            d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"
+                                        />
+                                        <path
+                                            d="m13.378 9.633 4.096 1.098 1.097-4.096"
+                                        />
+                                    </svg>
+                                    Recycle
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                          <p>Learning Rate: <span id="lr-display">0.001</span></p>
+                          <input class="form-range py-2" id="lr-slider" type="range" value="0.001" min="0.0" max="0.01" step="0.00001">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="infoModal" role="dialog">
+          <div class="modal-dialog">
+          
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">How do I use this?</h4>
+              </div>
+              <div class="modal-body">
+                <ol>
+                  <li class="py-1">Upload an image by clicking the button on the top right, you should see a preview of your image below</li>
+                  <li class="py-1">Look at the title on the right, our AI model predicted what type of image it is in the background automatically!</li>
+                  <li class="py-1">If the AI was wrong, you can train the model live by clicking the buttons on the bottom. </li>
+                  <li class="py-1">Once you train the AI, the weights will have changed, and the performance may have changed, you can see this on the left side of the page.</li>
+                  <li class="py-1">To learn more about the model in the background, you can go to <a href="/model">this page.</a></li>
+                </ol>
+              </div>
+              <div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+        <div class="modal fade" id="insideModal" role="dialog">
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Inside The Model</h4>
+              </div>
+              <div class="modal-body">
+              </div>
+                  <img class="img-fluid rounded shadow-sm mx-auto d-block" src="#" id="kernels-image" alt="" /> 
+              <div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+        <!-- ======= Footer ======= -->
+        <footer id="footer">
+            <div class="container d-md-flex py-4">
+                <div class="me-md-auto text-center text-md-start">
+                    <div class="copyright">
+                        &copy; Copyright <strong><span>Company</span></strong
+                        >. All Rights Reserved
+                    </div>
+                    <div class="credits">
+                        <!-- All the links in the footer should remain intact. -->
+                        <!-- You can delete the links only if you purchased the pro version. -->
+                        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/company-free-html-bootstrap-template/ -->
+                    </div>
+                </div>
+                <div class="social-links text-center text-md-right pt-3 pt-md-0">
+                    <a
+                        href="https://github.com/rhellwege/AIWasteRecognition"
+                        class="twitter"
+                        ><i class="bi bi-github"></i
+                    ></a>
+                    <a href="Meet_The_Team.html">Team</a>
+                </div>
+            </div>
+        </footer>
+        <!-- End Footer -->
+    </body>
+
+    <script>
+        var infoModal = document.getElementById('infoModal')
+        var insideModal = document.getElementById('insideModal')
+        var myInput = document.getElementById('myInput')
+
+        infoModal.addEventListener('shown.bs.modal', function () {
+          myInput.focus()
+        })
+        insideModal.addEventListener('shown.bs.modal', function () {
+          myInput.focus()
+        })
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                $("#prediction-results").html(`...`);
+                reader.onload = (e) => {
+                    // display the uploaded image
+                    $("#imageResult").attr("src", e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+                // upload to /predict endpoint
+                const formData = new FormData();
+                formData.append("image", input.files[0]);
+                fetch("/predict", {
+                    method: "POST",
+                    body: formData,
+                })
+                    .then((resp) => {
+                        return resp.json();
+                    })
+                    .then((data) => {
+                        const percentage = (
+                            Math.max(data.probabilities[0], data.probabilities[1]) *
+                            100
+                        ).toFixed(2);
+                        let predSpan = "";
+                        if (data.prediction === "Recycle") {
+                            predSpan = "<span style='color: blue'>Recycle</span>";
+                        } else {
+                            predSpan = "<span style='color: green'>Organic</span>";
+                        }
+                        // red-yellow-green
+                        const p = 2*((percentage-50)/100);
+                        const green = p*255;
+                        const red = (1-p)*255;
+                
+                        $("#prediction-results").html(`I'm <span style='color: rgb(${red}, ${green}, 0)'>${percentage}%</span> sure this is ${predSpan}`,
+                        );
+                        console.log(data);
+                    });
+            }
+        }
+        const input = document.getElementById("upload");
+        const infoArea = document.getElementById("upload-label");
+
+        $(() => {
+            reloadGrid();
+            $("#upload").on("change", () => {
+                readURL(input);
+            });
+            $('#lr-slider').on('input', () => {
+                $('#lr-display').html($('#lr-slider').val());
+            })
+            $('#reloadButton').on("click", () => {
+                fetch("/reload-model", {
+                    method: "PUT",
+                })
+                    .then((resp) => resp.text())
+                    .then((data) => {
+                        console.log(data);
+                        readURL(input);
+                        reloadGrid();
+                    });
+            });
+        });
+        input.addEventListener("change", showFileName);
+        function showFileName(event) {
+            var input = event.srcElement;
+            var fileName = input.files[0].name;
+            infoArea.textContent = "File name: " + fileName;
+        }
+
+        const trainDiv = document.getElementById("trainDiv");
+        const organicBtn = document.getElementById("organic");
+        const recyclableBtn = document.getElementById("recyclable");
+        trainDiv.style.display = "none";
+
+        input.addEventListener("change", () => {
+            if (input.files.length > 0) {
+                trainDiv.style.display = "block";
+            } else {
+                trainDiv.style.display = "none";
+            }
+        });
+        // training event listeners.
+        organicBtn.addEventListener("click", () => {
+            train(input, "Organic")
+              .then(() => {
+                readURL(input);
+                reloadGrid();
+            });
+        });
+        recyclableBtn.addEventListener("click", () => {
+            train(input, "Recyclable")
+              .then(() => {
+                readURL(input);
+                reloadGrid();
+            });
+        });
+        const grid = document.getElementById("imageExplore");
+        const kernels = document.getElementById("kernels-image");
+
+        // this function should be called on_model_change
+        function reloadGrid() {
+            grid.src =
+                "https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/main/svg-css/ring-resize.svg";
+            kernels.src =
+                "https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/main/svg-css/ring-resize.svg";
+            fetch("explore-predictions?" + new Date().getTime())
+                .then((res) => {
+                    if (!res.ok) throw new Error("No response from explore predictions");
+                    return res.blob();
+                })
+                .then((blob) => {
+                    const imgURL = URL.createObjectURL(blob);
+                    grid.src = imgURL;
+                    grid.onload = () => {
+                        URL.revokeObjectURL(imgURL);
+                    };
+                    return fetch("extract-last-layer?" + new Date().getTime());
+                })
+                .then((res) => {
+                    if (!res.ok) throw new Error("No response from last layer");
+                    return res.blob();
+                })
+                .then((blob) => {
+                    const imgURL = URL.createObjectURL(blob);
+                    console.log(imgURL)
+                    kernels.src = imgURL;
+                    kernels.onload = () => {
+                        URL.revokeObjectURL(imgURL);
+                    };
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+            
+        }
+
+        function train(imageInput, label) {
+            if (imageInput.files.length > 0) {
+                const imageFile = imageInput.files[0];
+                const formData = new FormData();
+                const trainH3 = document.getElementById("training-loss");
+                trainH3.innerText = "Training Loss: ...";
+                formData.append("image", imageFile);
+                formData.append("label", label);
+                const lr = $('#lr-slider').val();
+                return fetch(`/train?lr=${lr}`, {
+                    method: "PUT",
+                    body: formData,
+                })
+                    .then((resp) => {
+                        return resp.json();
+                    })
+                    .then((data) => {
+                        trainH3.innerText = `Training Loss: ${data.loss.toFixed(4)}`;
+                        console.log(data);
+                        return data;
+                    });
+            }
+        }
+    </script>
 </html>

@@ -88,7 +88,7 @@ class Predictor():
         result["prediction"] = classes[pred.argmax()]
         return result
     
-    def train(self, image, label: str) -> dict:
+    def train(self, image, label: str, lr: float = 0.001) -> dict:
         """
         image: image to train on
         label is the correct class of the prediction.
@@ -96,13 +96,16 @@ class Predictor():
         same as predict
         loss: a number indicating how badly the model predicted based on the label
         """
+        if lr != None:
+            self.optimizer = torch.optim.SGD(params=self.model.parameters(), lr=lr)
+
         label_tensor = None
         if label == "Organic":
             label_tensor = torch.Tensor([1, 0]).unsqueeze(dim=0).to(self.device)
         elif label == "Recyclable":
             label_tensor = torch.Tensor([0, 1]).unsqueeze(dim=0).to(self.device)
 
-        print(f'[PREDICTOR] :: Live training image as {label}')
+        print(f'[PREDICTOR] :: Live training image as {label} with learning_rate {lr}')
         image = image.convert("RGB")
         img_tensor = self.transformer(image).unsqueeze(dim=0).to(self.device)
         result = {}
@@ -161,6 +164,41 @@ class Predictor():
         end = time.time()
         print(f"[PREDICTOR] :: exploring predictions on {num_images} images. took {end-start} seconds, {(num_correct/(width*width))*100:.2f}% Accurate | Loss: {loss.item():.4f}")
         return buffer
+
+    def extract_last_layer(self):
+        start = time.time()
+        first_conv_layer = None
+        for name, layer in self.model.named_modules():
+            if name == "conv_block_3.0":
+                first_conv_layer = layer
+                break
+
+        if first_conv_layer is not None:
+            filters = first_conv_layer.weight.data.cpu().numpy()
+            num_filters = filters.shape[0]
+            num_cols = 12
+            num_rows = num_filters // num_cols + 1
+            fig, axes = plt.subplots(num_rows, num_cols, figsize=(4,4))
+            for i, ax in enumerate(axes.flatten()):
+                if i < num_filters:
+                    filter_img = filters[i]
+                    for j in range(3):
+                        ax.imshow(filter_img[j], cmap='viridis')
+                    ax.axis('off')
+                else:
+                    ax.axis('off')
+            plt.suptitle(f"Last Conv Layer")
+            plt.tight_layout()
+            buffer = io.BytesIO()
+            plt.savefig(buffer, format='png')
+            buffer.seek(0)
+            plt.clf() # make sure we don't interfere with main thread
+            plt.close('all')
+            end = time.time()
+            print(f"[PREDICTOR] :: Extracting last layer kernels took {end-start} seconds")
+            return buffer
+        print(f"[PREDICTOR] :: ERROR: Could not find the last conv layer")
+        return None
 
 
 def explore_dataset(dataset_dir, width=3):

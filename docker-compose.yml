@@ -3,8 +3,12 @@ services:
   app:
     container_name: waste_recognition
     build: .
+    restart: always
     ports:
       - 5000:5000
     environment:
       - PYTHONUNBUFFERED=TRUE
+    volumes:
+      - ./static:/usr/src/app/static
+      - ./templates:/usr/src/app/templates
 
