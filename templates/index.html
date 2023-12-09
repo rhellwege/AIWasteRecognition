@@ -381,6 +381,7 @@
               </div>
               <div class="modal-body">
               </div>
+                  <img class="img-fluid rounded shadow-sm mx-auto d-block" src="#" id="kernels-image" alt="" /> 
               <div>
               </div>
               <div class="modal-footer">
@@ -529,26 +530,43 @@
             });
         });
         const grid = document.getElementById("imageExplore");
+        const kernels = document.getElementById("kernels-image");
 
+        // this function should be called on_model_change
         function reloadGrid() {
             grid.src =
                 "https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/main/svg-css/ring-resize.svg";
+            kernels.src =
+                "https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/main/svg-css/ring-resize.svg";
             fetch("explore-predictions?" + new Date().getTime())
                 .then((res) => {
-                    if (!res.ok) throw new Error("No response");
+                    if (!res.ok) throw new Error("No response from explore predictions");
                     return res.blob();
                 })
                 .then((blob) => {
                     const imgURL = URL.createObjectURL(blob);
-                    // const tempImg = new Image();
                     grid.src = imgURL;
                     grid.onload = () => {
+                        URL.revokeObjectURL(imgURL);
+                    };
+                    return fetch("extract-last-layer?" + new Date().getTime());
+                })
+                .then((res) => {
+                    if (!res.ok) throw new Error("No response from last layer");
+                    return res.blob();
+                })
+                .then((blob) => {
+                    const imgURL = URL.createObjectURL(blob);
+                    console.log(imgURL)
+                    kernels.src = imgURL;
+                    kernels.onload = () => {
                         URL.revokeObjectURL(imgURL);
                     };
                 })
                 .catch((err) => {
                     console.error(err);
                 });
+            
         }
 
         function train(imageInput, label) {
