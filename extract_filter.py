@@ -26,13 +26,10 @@ for name, layer in model.named_modules():
 
 if first_conv_layer is not None:
     filters = first_conv_layer.weight.data.cpu().numpy()
-
     num_filters = filters.shape[0]
-    num_cols = 8
+    num_cols = 12
     num_rows = num_filters // num_cols + 1
-
-    fig, axes = plt.subplots(num_rows, num_cols, figsize=(12,12))
-
+    fig, axes = plt.subplots(num_rows, num_cols, figsize=(4,4))
     for i, ax in enumerate(axes.flatten()):
         if i < num_filters:
             filter_img = filters[i]
@@ -41,6 +38,5 @@ if first_conv_layer is not None:
             ax.axis('off')
         else:
             ax.axis('off')
-
-    plt.subplots_adjust(wspace=0.1, hspace=0.1)
+    # plt.subplots_adjust(wspace=0.1, hspace=0.1)
     plt.show()

@@ -11,7 +11,7 @@
         <!-- Favicons -->
 
         <link
-            href="{{ url_for('static', filename='assets/apple-touch-icon.png')}}"
+            href="{{ url_for('static', filename='assets/favicon.ico')}}"
             type="image/x-icon" 
             rel="icon"
         />
@@ -87,14 +87,11 @@
         <!-- End Header -->
 
         <!-- main content -->
-        <div class="mt-5 container py-5 mx-auto">
+        <div class="main-container pt-5 container py-5 mx-auto">
             <!-- Controls Row -->
-            <div class="row gx-5">
+            <div class="p-3 row gx-5">
                 <!-- Model Col -->
                 <div class="col mx-auto">
-                    <header class="text-black text-center">
-                        <!-- <h2 class="display-4">Performance</h2> -->
-                    </header>
                     <h2 id="">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -115,7 +112,7 @@
                         </svg>
                         Model Controls
                     </h2>
-                    <div class="d-flex justify-content-between">
+                    <div class="py-3 d-flex justify-content-between">
                         <div class="d-flex">
                             <button
                                 id="reloadButton"
@@ -170,7 +167,7 @@
                                 New Grid
                             </button>
                         </div>
-                        <button id="info-button" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#myModal">
+                        <button id="info-button" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#infoModal">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
                         </button>
                     </div>
@@ -215,7 +212,7 @@
                 </div>
             </div>
             <!-- Display Row -->
-            <div class="row gx-5">
+            <div class="display-row row gx-5">
                 <div class="col mx-auto">
                     <img
                         class="img-fluid rounded shadow-sm mx-auto d-block"
@@ -244,7 +241,10 @@
             <!-- Training row -->
             <div class="mt-1 row gx-5">
                 <div class="col mx-auto">
-                    <h2 id="training-loss" class="py-2"></h2>
+                    <div class="p-3 d-flex justify-content-between">
+                      <h2 id="training-loss" class="my-auto"></h2>
+                      <button id="see-inside-btn" type="button" class="py-2 btn btn-success btn-sm" data-toggle="modal" data-target="#insideModal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zoom-in"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/><line x1="11" x2="11" y1="8" y2="14"/><line x1="8" x2="14" y1="11" y2="11"/></svg> See Inside</button>
+                    </div>
                 </div>
                 <div class="col mx-auto">
                     <div id="trainDiv">
@@ -343,7 +343,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal fade" id="infoModal" role="dialog">
           <div class="modal-dialog">
           
             <!-- Modal content-->
@@ -359,10 +359,27 @@
                   <li class="py-1">If the AI was wrong, you can train the model live by clicking the buttons on the bottom. </li>
                   <li class="py-1">Once you train the AI, the weights will have changed, and the performance may have changed, you can see this on the left side of the page.</li>
                   <li class="py-1">To learn more about the model in the background, you can go to <a href="/model">this page.</a></li>
-                  
                 </ol>
-                
-
+              </div>
+              <div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+        <div class="modal fade" id="insideModal" role="dialog">
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Inside The Model</h4>
+              </div>
+              <div class="modal-body">
               </div>
               <div>
               </div>
@@ -403,10 +420,14 @@
     </body>
 
     <script>
-        var myModal = document.getElementById('myModal')
+        var infoModal = document.getElementById('infoModal')
+        var insideModal = document.getElementById('insideModal')
         var myInput = document.getElementById('myInput')
 
-        myModal.addEventListener('shown.bs.modal', function () {
+        infoModal.addEventListener('shown.bs.modal', function () {
+          myInput.focus()
+        })
+        insideModal.addEventListener('shown.bs.modal', function () {
           myInput.focus()
         })
         function readURL(input) {

@@ -58,5 +58,10 @@ def reload_model_endpoint():
     print("[SERVER] :: ", 'reseting predictor weights')
     return 'Reloaded model.'
 
+@app.route('/extract-last-layer', methods=['GET'])
+def handle_extract():
+    imgbytes = predictor.extract_last_layer()
+    return send_file(imgbytes, mimetype='image/png')
+
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")

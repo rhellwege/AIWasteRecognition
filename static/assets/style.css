@@ -864,12 +864,13 @@ body{margin-top:20px;}
     position: relative;
 }
 
-
 body {
     min-height: 100vh;
 
     background-image: linear-gradient(147deg, #fcfcfc 0%, #ffffff 100%);
 }
 
-
-
+.main-container {
+  padding-left: 7%;
+  padding-right: 7%;
+}
