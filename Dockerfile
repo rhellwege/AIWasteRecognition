@@ -13,4 +13,4 @@ RUN unzip ./test_data.zip
 EXPOSE 5000
 
 ENV PYTHONUNBUFFERED=TRUE
-RUN ["python3", "-u", "server.py"]
+CMD ["python3", "-u", "server.py"]
