@@ -12,6 +12,9 @@ predictor = Predictor(default_model, device ='cpu')
 
 app = Flask(__name__)
 
+def create_app():
+    return Flask(__name__) 
+
 @app.route('/')
 def index():
     print(f'Hello {request.remote_addr}')
